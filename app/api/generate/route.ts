@@ -129,12 +129,23 @@ async function generatePlan(words: string[], grade: string, theme: string, vocab
       const content = result.choices[0].message.content;
 
       // 解析JSON响应
-      const plan: AdventurePlan = JSON.parse(content);
+      const parsedPlan: any = JSON.parse(content);
+
+      // 确保所有字段都是数组，即使AI返回了不完整的数据
+      const plan: AdventurePlan = {
+        theme: parsedPlan.theme || '未知主题',
+        part0_word_clinic: Array.isArray(parsedPlan.part0_word_clinic) ? parsedPlan.part0_word_clinic : [],
+        part1_fill_blank: Array.isArray(parsedPlan.part1_fill_blank) ? parsedPlan.part1_fill_blank : [],
+        part2_multiple_choice: Array.isArray(parsedPlan.part2_multiple_choice) ? parsedPlan.part2_multiple_choice : [],
+        part3_reading: Array.isArray(parsedPlan.part3_reading) ? parsedPlan.part3_reading : [],
+        part4_mini_mission: Array.isArray(parsedPlan.part4_mini_mission) ? parsedPlan.part4_mini_mission : []
+      };
 
       // 验证返回的数据结构
-      if (!plan.theme || !plan.part0_word_clinic || !plan.part1_fill_blank ||
-          !plan.part2_multiple_choice || !plan.part3_reading || !plan.part4_mini_mission) {
-        throw new Error('AI返回的数据格式不正确');
+      if (!plan.theme || plan.part0_word_clinic.length === 0 || plan.part1_fill_blank.length === 0 ||
+          plan.part2_multiple_choice.length === 0 || plan.part3_reading.length === 0 || plan.part4_mini_mission.length === 0) {
+        console.error('AI返回的数据不完整:', JSON.stringify(plan, null, 2));
+        throw new Error('AI返回的数据格式不正确，部分内容为空');
       }
 
       return plan;
