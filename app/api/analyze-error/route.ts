@@ -311,8 +311,9 @@ async function analyzeAllErrors(images: string[], grade: string): Promise<Analys
       let errorsArray: SingleErrorResult[];
       try {
         errorsArray = JSON.parse(jsonContent);
-      } catch (parseError) {
-        console.error('第一次JSON解析失败，尝试清理:', parseError.message);
+      } catch (parseError: unknown) {
+        const errorMsg = parseError instanceof Error ? parseError.message : String(parseError);
+        console.error('第一次JSON解析失败，尝试清理:', errorMsg);
 
         // 如果直接解析失败，尝试清理 JSON 字符串
         // 移除可能存在的注释、多余空格等
