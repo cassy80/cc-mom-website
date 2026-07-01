@@ -12,10 +12,10 @@ export async function GET(request: Request) {
     const authHeader = request.headers.get('authorization');
     const password = authHeader?.replace('Bearer ', '');
 
-    // 验证密码
-    const correctPassword = process.env.ADMIN_PASSWORD;
+    // 验证密码（英语管理后台专用）
+    const correctPassword = 'admin888';
 
-    if (!correctPassword || password !== correctPassword) {
+    if (password !== correctPassword) {
       return NextResponse.json({
         success: false,
         message: '需要管理员权限'
