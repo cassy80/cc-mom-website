@@ -1,0 +1,44 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Author",
+  "name": "CC妈",
+  "description": "专注AI教育实战的零代码专家，15岁与8岁双宝妈，20年大厂思维，专注于AI教育实战、零代码、女性破局。Gemini全球认证教育专家，曾就职于墨尔本世界500强企业和中粮集团大悦城。",
+  "image": "https://ccma-ai.com/images/avatar.jpg",
+  "sameAs": [
+    "https://www.xiaohongshu.com/user/profile/498481010"
+  ],
+  "worksFor": {
+    "@type": "Organization",
+    "name": "CC妈AI教育",
+    "url": "https://ccma-ai.com"
+  },
+  "knowsAbout": [
+    {
+      "@type": "Thing",
+      "name": "AI教育实战"
+    },
+    {
+      "@type": "Thing",
+      "name": "零代码AI应用"
+    },
+    {
+      "@type": "Thing",
+      "name": "Gemini AI"
+    },
+    {
+      "@type": "Thing",
+      "name": "女性职业发展"
+    },
+    {
+      "@type": "Thing",
+      "name": "大厂管理思维"
+    }
+  ],
+  "alumniOf": [
+    {
+      "@type": "EducationalOrganization",
+      "name": "澳大利亚大学",
+      "alumniOf": "信息系统IT硕士"
+    }
+  ]
+}

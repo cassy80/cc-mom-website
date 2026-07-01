@@ -1,0 +1,105 @@
+{
+  "articles": [
+    {
+      "id": "multimodal-ai-deep-learning",
+      "title": "别再只跟 AI 聊天了",
+      "excerpt": "进入2026年，生成式AI已完成从文本到多模态的跨越。本文基于Gemini 1.5/3 Pro的多模态推理能力，深度解析如何利用AI的视觉与逻辑缝合技术，破解几何、物理、化学等理科难题的抽象概念痛点。",
+      "category": "AI教育实战",
+      "tags": ["多模态AI", "Gemini实战", "理科学习", "视觉推理", "跨学科学习"],
+      "coverImage": "/images/articles/multimodal-ai-deep-learning.jpg",
+      "date": "2024-03-24",
+      "readTime": "10分钟",
+      "featured": true,
+      "likes": 2100,
+      "views": 14500,
+      "series": "AI深度学习专题"
+    },
+    {
+      "id": "working-mom-efficiency",
+      "title": "职场妈妈提前2小时下班的秘诀",
+      "excerpt": "职场妈妈的焦虑源于高频、碎片且低效的办公压力。本文基于AI工程师与前500强高管的双重视角，深度拆解一套职场提效组合拳，涵盖通义听悟、Kimi PPT、Gemini Deep Research等6大神器。",
+      "category": "女性成长",
+      "tags": ["职场提效", "AI办公", "时间管理", "女性成长", "工作生活平衡"],
+      "coverImage": "/images/articles/working-mom-digital-clone.jpg",
+      "date": "2024-03-23",
+      "readTime": "9分钟",
+      "featured": true,
+      "likes": 2340,
+      "views": 15600
+    },
+    {
+      "id": "zero-code-programming",
+      "title": "如何带 8-15 岁孩子开启零代码 AI 创造之旅",
+      "excerpt": "进入2026年，编程的定义已发生本质变化：从编写代码语法转向定义逻辑架构。本文基于Trae与Claude Code的实战应用，探讨如何引导8-15岁孩子利用零代码技术，将创意转化为实际应用。",
+      "category": "零代码工具",
+      "tags": ["零代码编程", "逻辑思维", "Trae实战", "人机协作", "AI素质教育"],
+      "coverImage": "/images/articles/zero-code-programming.jpg",
+      "date": "2024-03-22",
+      "readTime": "8分钟",
+      "featured": true,
+      "likes": 1890,
+      "views": 12300
+    },
+    {
+      "id": "ai-learning-system-2026",
+      "title": "为孩子搭建2026学习系统",
+      "excerpt": "进入2026年，生成式AI的迭代速度已让传统辅导方式彻底失效。本文实测并筛选出6款核心AI工具，构建了一套面向未来的四层学习操作系统：从知识数据库到多模态全科私教，再到逻辑构建与创意产出。",
+      "category": "AI教育实战",
+      "tags": ["AI学习系统", "2026教育趋势", "零代码编程", "工具推荐", "未来竞争力"],
+      "coverImage": "/images/articles/ai-learning-system-2026.png",
+      "date": "2024-03-20",
+      "readTime": "10分钟",
+      "featured": true,
+      "likes": 1560,
+      "views": 9800,
+      "series": "AI深度学习专题"
+    },
+    {
+      "id": "doubao-english-tutor",
+      "title": "用豆包辅导孩子学英语，4个隐藏技巧",
+      "excerpt": "拒绝死记硬背！本文分享如何利用豆包AI的视频通话、语义理解等多模态能力，构建从试卷错题分析、自律化课后辅导、阅读语境重构到生活化语境习得的英语提效闭环。",
+      "category": "AI教育实战",
+      "tags": ["豆包AI", "英语学习", "AI辅导", "提问力", "期末复习"],
+      "coverImage": "/images/articles/doubao-english.jpg",
+      "date": "2024-03-18",
+      "readTime": "7分钟",
+      "featured": true,
+      "likes": 890,
+      "views": 5600
+    },
+    {
+      "id": "ai-questioning-power",
+      "title": "AI时代，如何培养孩子的提问力？",
+      "excerpt": "在AI时代，会提问比会回答更重要。记忆力会被AI取代，但思考力不会。这篇文章分享培养孩子AI提问力的5个实用方法。",
+      "category": "AI教育实战",
+      "tags": ["提问力", "AI教育", "家庭教育", "批判性思维"],
+      "coverImage": "/images/articles/questioning-power.jpg",
+      "date": "2024-03-15",
+      "readTime": "8分钟",
+      "featured": true,
+      "likes": 1240,
+      "views": 8900,
+      "series": "AI深度学习专题"
+    },
+    {
+      "id": "chatgpt-homework-helper",
+      "title": "用ChatGPT辅导孩子作业，这5个技巧太实用了",
+      "excerpt": "ChatGPT是家庭教育的强大助手，但关键是要用对方法。分享5个实战技巧，让AI真正成为孩子的学习伙伴，而不是作弊工具。",
+      "category": "工具应用",
+      "tags": ["ChatGPT", "作业辅导", "提示词", "学习方法"],
+      "coverImage": "/images/articles/chatgpt-homework.jpg",
+      "date": "2024-03-10",
+      "readTime": "6分钟",
+      "featured": true,
+      "likes": 2150,
+      "views": 15200
+    }
+  ],
+  "categories": [
+    "全部",
+    "AI教育实战",
+    "工具应用",
+    "零代码工具",
+    "女性成长"
+  ]
+}

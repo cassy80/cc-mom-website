@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "CC妈",
+  "givenName": "CC",
+  "familyName": "妈",
+  "jobTitle": "AI教育博主",
+  "description": "专注AI教育实战的零代码专家，15岁与8岁双宝妈，20年大厂思维，专注于AI教育实战、零代码、女性破局。Gemini全球认证教育专家，曾就职于墨尔本当地世界500强企业，前中粮集团大悦城部门总。",
+  "url": "https://ccma-ai.com",
+  "image": "https://ccma-ai.com/images/avatar.jpg",
+  "sameAs": [
+    "https://www.xiaohongshu.com/user/profile/498481010"
+  ],
+  "knowsAbout": [
+    "AI教育",
+    "零代码AI应用",
+    "Gemini AI",
+    "教育技术",
+    "女性职业发展",
+    "大厂管理思维"
+  ],
+  "alumniOf": [
+    {
+      "@type": "EducationalOrganization",
+      "name": "澳大利亚大学",
+      "alumniOf": "信息系统IT硕士"
+    }
+  ],
+  "worksFor": [
+    {
+      "@type": "Organization",
+      "name": "墨尔本世界500强企业",
+      "jobTitle": "资深工程师"
+    },
+    {
+      "@type": "Organization",
+      "name": "中粮集团大悦城",
+      "jobTitle": "部门总"
+    }
+  ],
+  "credential": {
+    "@type": "EducationalOccupationalCredential",
+    "credentialCategory": "Professional Certification",
+    "name": "Gemini全球认证教育专家"
+  }
+}

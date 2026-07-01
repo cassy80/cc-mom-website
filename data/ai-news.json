@@ -1,0 +1,32 @@
+{
+  "last_updated": "2026-03-24T02:36:00Z",
+  "data": [
+    {
+      "id": "news-001",
+      "title": "OpenAI 发布最新教育模型，专攻儿童逻辑思维训练",
+      "source": "TechCrunch",
+      "date": "2026-03-23",
+      "tags": ["AI", "教育", "逻辑思维"],
+      "relevance": "high",
+      "summary": "该模型强调通过对话而非记忆来训练儿童的提问能力，符合零代码教育理念。"
+    },
+    {
+      "id": "news-002",
+      "title": "Kimi 推出沉浸式口语陪练功能，零代码也能练地道口语",
+      "source": "ProductHunt",
+      "date": "2026-03-22",
+      "tags": ["Kimi", "口语", "AI工具"],
+      "relevance": "high",
+      "summary": "利用 AI 创造语境，让孩子在自然对话中提升语言能力，解放家长双手。"
+    },
+    {
+      "id": "news-003",
+      "title": "硅谷圆桌深度解析：未来十年 AI 如何改变家庭教育生态",
+      "source": "36Kr",
+      "date": "2026-03-24",
+      "tags": ["硅谷", "家庭教育", "AI趋势"],
+      "relevance": "medium",
+      "summary": "讨论了 AI 辅导工具的普及将如何重塑亲子关系和家庭教育模式。"
+    }
+  ]
+}

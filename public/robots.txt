@@ -1,0 +1,12 @@
+# CC妈AI教育网站 robots.txt
+
+User-agent: *
+Allow: /
+
+# 禁止爬取的目录
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+
+# 网站地图
+Sitemap: https://ccma-ai.com/sitemap.xml

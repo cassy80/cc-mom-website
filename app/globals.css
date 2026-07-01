@@ -1,0 +1,245 @@
+@import "tailwindcss";
+
+:root {
+  /* Apple风格 - 极简浅色主题 */
+  --background: #FFFFFF;
+  --background-alt: #F5F5F7;
+  --background-card: #FFFFFF;
+  --foreground: #1D1D1F;
+  --foreground-muted: #86868B;
+
+  /* Apple品牌色 - 深邃蓝 */
+  --brand-primary: #0055BB;
+  --brand-primary-light: #007AFF;
+  --brand-primary-dark: #003A99;
+
+  /* 副色 - 紫罗兰 */
+  --brand-secondary: #5856D6;
+  --brand-secondary-light: #AF52DE;
+  --brand-secondary-dark: #3A3A75;
+
+  /* 强调色 - Apple红 */
+  --brand-accent: #FF3B30;
+  --brand-accent-hover: #E52D22;
+
+  /* 边框 - Apple极浅灰 */
+  --border: #E5E5EA;
+  --border-light: #F2F2F7;
+
+  /* 语义色 */
+  --success: #34C759;
+  --warning: #FF9500;
+  --error: #FF3B30;
+  --info: #007AFF;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-alt: var(--background-alt);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+
+  /* 品牌主色 - 陶土红 */
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-light: var(--brand-primary-light);
+  --color-brand-primary-dark: var(--brand-primary-dark);
+
+  /* 品牌副色 - 鼠尾草绿 */
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-secondary-light: var(--brand-secondary-light);
+  --color-brand-secondary-dark: var(--brand-secondary-dark);
+
+  /* 品牌强调色 - 芥末黄 */
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-accent-hover: var(--brand-accent-hover);
+
+  --color-border: var(--border);
+  --color-border-light: var(--border-light);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-info: var(--info);
+
+  /* Linear字体系统 - 现代极简 */
+  --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Inter', 'Noto Sans SC', sans-serif;
+  --font-display: 'Inter', 'Noto Sans SC', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* 保持兼容 */
+  --color-primary: var(--brand-primary);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+/* Apple风格 - 移除纹理背景 */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 优化的自定义滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-alt);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--brand-primary);
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-primary-dark);
+}
+
+/* 文字选择 - 陶土红 */
+::selection {
+  background-color: var(--brand-primary);
+  color: white;
+}
+
+/* 链接样式 */
+a {
+  color: var(--brand-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--brand-primary-dark);
+}
+
+/* Hero 区域 - 新的渐变背景 */
+.bg-hero-gradient {
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-hero-gradient::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 70%
+  );
+  animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-10%, -10%) rotate(5deg); }
+}
+
+/* 实用类 */
+.container-content {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.container-narrow {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* 轻微上下浮动动画 */
+@keyframes floatCard {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float-card {
+  animation: floatCard 4s ease-in-out infinite;
+}
+
+/* Apple风格 - 卡片悬停效果 */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  border: 1px solid var(--border);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Apple风格 - 渐变背景 */
+.bg-elegant-gradient {
+  background: linear-gradient(
+    180deg,
+    var(--background) 0%,
+    var(--background-alt) 100%
+  );
+}
+
+/* Apple风格 - 按钮悬停 */
+.btn-apple {
+  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.btn-apple:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+}
+
+.btn-apple:active {
+  transform: scale(0.98);
+}
+
+/* Apple风格 - 毛玻璃效果 */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}

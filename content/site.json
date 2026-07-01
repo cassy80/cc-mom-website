@@ -1,0 +1,33 @@
+{
+  "name": "CC妈AI教育",
+  "description": "专注AI教育实战、零代码应用、女性破局。15岁与8岁双宝妈，20年大厂思维，Gemini全球认证教育专家，分享AI+教育的实践与思考。",
+  "url": "https://ccma-ai.com",
+  "locale": "zh-CN",
+  "author": {
+    "name": "CC妈",
+    "url": "https://ccma-ai.com/about"
+  },
+  "social": {
+    "xiaohongshu": "https://www.xiaohongshu.com/user/profile/498481010"
+  },
+  "keywords": [
+    "AI教育实战",
+    "零代码AI应用",
+    "Gemini教育",
+    "女性职业发展",
+    "大厂管理思维",
+    "AI教学工具",
+    "教育AI化",
+    "CC妈"
+  ],
+  "theme": {
+    "primary": "#2563EB",
+    "primaryLight": "#3B82F6",
+    "accent": "#F59E0B",
+    "background": "#FFFFFF",
+    "backgroundAlt": "#F8FAFC",
+    "text": "#1E293B",
+    "textMuted": "#64748B",
+    "border": "#E2E8F0"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "keys": [
+    {
+      "code": "CCMOM-TEST",
+      "totalUses": 100,
+      "remainingUses": 83,
+      "createdAt": "2025-01-15T00:00:00.000Z",
+      "note": "测试卡密，100次使用额度，永不过期"
+    },
+    {
+      "code": "TEST-768A697C",
+      "totalUses": 100,
+      "remainingUses": 100,
+      "createdAt": "2026-06-09T07:19:40.502Z",
+      "note": "批量生成 - 2026/6/9"
+    },
+    {
+      "code": "TEST-3D386272",
+      "totalUses": 100,
+      "remainingUses": 100,
+      "createdAt": "2026-06-09T07:19:40.520Z",
+      "note": "批量生成 - 2026/6/9"
+    },
+    {
+      "code": "TEST-17660A24",
+      "totalUses": 100,
+      "remainingUses": 100,
+      "createdAt": "2026-06-09T07:19:40.520Z",
+      "note": "批量生成 - 2026/6/9"
+    },
+    {
+      "code": "XJF-2025-001",
+      "totalUses": 200,
+      "remainingUses": 183,
+      "createdAt": "2025-01-28T00:00:00.000Z",
+      "note": "粉丝专用测试卡密 - 200次使用额度"
+    }
+  ],
+  "lastUpdated": "2026-07-01T05:35:00.650Z"
+}

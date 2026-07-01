@@ -1,0 +1,55 @@
+{
+  "lastUpdate": "2026-03-04T10:00:00+08:00",
+  "news": [
+    {
+      "id": "1",
+      "title": "OpenAI 发布 GPT-5 Turbo，推理速度提升 40%",
+      "description": "OpenAI 宣布 GPT-5 Turbo 正式发布，推理速度比 GPT-4 提升 40%，成本降低 50%，同时支持更长的上下文窗口",
+      "category": "产品发布",
+      "priority": "high",
+      "time": "2026-03-04T09:30:00+08:00",
+      "source": "OpenAI 官方博客",
+      "link": "https://openai.com/blog/gpt-5-turbo"
+    },
+    {
+      "id": "2",
+      "title": "Google 发布 Gemini 2.5 Flash，多模态响应速度提升 50%",
+      "description": "Google 发布 Gemini 2.5 Flash 版本，支持文本、图像、音频、视频多模态输入输出，响应速度提升 50%",
+      "category": "产品发布",
+      "priority": "high",
+      "time": "2026-03-04T10:15:00+08:00",
+      "source": "Google AI 博客",
+      "link": "https://blog.google/technology/ai/gemini-2.5-flash"
+    },
+    {
+      "id": "3",
+      "title": "OpenAI 完成新一轮融资，估值达 1000 亿美元",
+      "description": "OpenAI 宣布完成新一轮融资，估值达到 1000 亿美元，投资者包括微软、红杉资本等知名机构",
+      "category": "融资动态",
+      "priority": "high",
+      "time": "2026-03-03T14:00:00+08:00",
+      "source": "TechCrunch",
+      "link": "https://techcrunch.com/2026/03/04/openai-funding"
+    },
+    {
+      "id": "4",
+      "title": "Google DeepMind AlphaFold 3 发布，准确率达 98%",
+      "description": "Google DeepMind 发布 AlphaFold 3，蛋白质结构预测准确率达到 98%，有望彻底改变药物研发和生物学研究",
+      "category": "技术突破",
+      "priority": "high",
+      "time": "2026-03-03T11:00:00+08:00",
+      "source": "Google AI",
+      "link": "https://deepmind.google/blog/alphafold-3"
+    },
+    {
+      "id": "5",
+      "title": "欧盟通过 AI 监管法案",
+      "description": "欧盟正式通过 AI 监管法案，要求 AI 系统透明度、风险评估、人类监管等强制性措施",
+      "category": "行业新闻",
+      "priority": "medium",
+      "time": "2026-03-02T12:00:00+08:00",
+      "source": "Reuters",
+      "link": "https://reuters.com/technology/2026/03/04/eu-ai-regulation"
+    }
+  ]
+}
