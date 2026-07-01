@@ -8,8 +8,8 @@ export async function POST(request: Request) {
   try {
     const { password } = await request.json();
 
-    // 从环境变量获取正确的管理员密码
-    const correctPassword = process.env.ADMIN_PASSWORD;
+    // 从环境变量获取英语学习管理后台密码（独立密码）
+    const correctPassword = process.env.ADMIN_ENGLISH_PASSWORD || 'admin888';
 
     if (!correctPassword) {
       return NextResponse.json({
