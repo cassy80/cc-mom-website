@@ -8,15 +8,8 @@ export async function POST(request: Request) {
   try {
     const { password } = await request.json();
 
-    // 从环境变量获取英语学习管理后台密码（独立密码）
-    const correctPassword = process.env.ADMIN_ENGLISH_PASSWORD || 'admin888';
-
-    if (!correctPassword) {
-      return NextResponse.json({
-        success: false,
-        message: '服务器配置错误：未设置管理员密码'
-      }, { status: 500 });
-    }
+    // 直接硬编码密码（英语学习管理后台专用）
+    const correctPassword = 'admin888';
 
     // 验证密码
     if (password === correctPassword) {
