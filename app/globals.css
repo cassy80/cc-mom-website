@@ -259,6 +259,20 @@ a:hover {
     white-space: nowrap;
   }
 
+  /* 第二个水印 */
+  body::after {
+    content: "CC妈育见AI";
+    position: fixed;
+    top: 20%;
+    left: 20%;
+    transform: rotate(-45deg);
+    font-size: 70px;
+    color: rgba(0, 0, 0, 0.04);
+    z-index: 9999;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
   @page {
     size: A4;
     margin: 2cm;
@@ -266,5 +280,18 @@ a:hover {
 
   .no-print {
     display: none !important;
+  }
+
+  /* 添加更多水印背景 - 覆盖整个页面 */
+  body > * {
+    background-image:
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 250px,
+        rgba(0, 0, 0, 0.03) 250px,
+        rgba(0, 0, 0, 0.03) 500px
+      );
+    background-attachment: fixed;
   }
 }
