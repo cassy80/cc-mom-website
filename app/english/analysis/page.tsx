@@ -437,29 +437,5 @@ export default function AnalysisPage() {
         </div>
       </footer>
     </div>
-
-    {/* 打印水印 */}
-    <style jsx global>{`
-      @media print {
-        body::before {
-          content: "CC妈育见AI";
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%) rotate(-45deg);
-          font-size: 80px;
-          color: rgba(0, 0, 0, 0.05);
-          z-index: 9999;
-          pointer-events: none;
-          white-space: nowrap;
-        }
-
-        @page {
-          size: A4;
-          margin: 2cm;
-        }
-      }
-    `}</style>
-    </>
   );
 }
