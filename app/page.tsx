@@ -28,7 +28,7 @@ export default function Home() {
           </div>
 
           {/* 核心内容卡片 - 使用新配色 */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
             <FeatureCard
               title="关于我"
               description="了解CC妈的教育背景、专业认证和AI教育实践历程"
@@ -57,6 +57,16 @@ export default function Home() {
               stats={{
                 label: "原创文章",
                 value: "8篇"
+              }}
+            />
+            <FeatureCard
+              title="英语学习"
+              description="AI错题分析、趣味单词游戏、科学复习系统"
+              icon="📚"
+              href="/english"
+              stats={{
+                label: "学习工具",
+                value: "3个"
               }}
             />
             <FeatureCard
