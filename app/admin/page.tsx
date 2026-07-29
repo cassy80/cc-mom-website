@@ -10,6 +10,16 @@ interface Stats {
   lastUpdated: string;
 }
 
+interface GameStats {
+  games: {
+    [key: string]: {
+      playCount: number;
+      lastPlayed: string;
+    };
+  };
+  lastUpdated: string;
+}
+
 const ADMIN_PASSWORD = 'ccmum2025';
 
 export default function AdminPage() {
@@ -17,6 +27,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [stats, setStats] = useState<Stats>({ views: 0, aiCitations: 0, lastUpdated: '' });
+  const [gameStats, setGameStats] = useState<GameStats>({ games: {}, lastUpdated: '' });
   const [loading, setLoading] = useState(false);
   const [updateValue, setUpdateValue] = useState('');
 
@@ -26,6 +37,7 @@ export default function AdminPage() {
     if (authStatus === 'true') {
       setIsAuthenticated(true);
       fetchStats();
+      fetchGameStats();
     }
   }, []);
 
@@ -36,6 +48,16 @@ export default function AdminPage() {
       setStats(data);
     } catch (error) {
       console.error('Failed to fetch stats:', error);
+    }
+  };
+
+  const fetchGameStats = async () => {
+    try {
+      const res = await fetch('/api/game-stats');
+      const data = await res.json();
+      setGameStats(data);
+    } catch (error) {
+      console.error('Failed to fetch game stats:', error);
     }
   };
 
@@ -205,6 +227,57 @@ export default function AdminPage() {
                 当ChatGPT/Claude等AI引用时更新
               </p>
             </div>
+          </div>
+
+          {/* 游戏统计卡片 */}
+          <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-green-500/20 mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                🎮 游戏统计
+              </h3>
+              <button
+                onClick={fetchGameStats}
+                className="px-4 py-2 text-sm bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
+              >
+                🔄 刷新
+              </button>
+            </div>
+
+            {Object.keys(gameStats.games).length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Object.entries(gameStats.games).map(([gameId, game]) => (
+                  <div key={gameId} className="p-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-xl border border-green-200">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-3xl">{gameId === '24-point' ? '🎴' : '🎮'}</span>
+                      <div>
+                        <h4 className="font-bold text-foreground">
+                          {gameId === '24-point' ? '24点扑克牌挑战' : gameId}
+                        </h4>
+                        <p className="text-xs text-foreground-muted">游戏ID: {gameId}</p>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-foreground-muted">游玩次数</span>
+                        <span className="text-2xl font-bold text-green-600">{game.playCount}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-foreground-muted">最后游玩</span>
+                        <span className="text-xs text-foreground-muted">
+                          {game.lastPlayed ? new Date(game.lastPlayed).toLocaleString('zh-CN') : '暂无记录'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-foreground-muted py-8">暂无游戏数据</p>
+            )}
+
+            <p className="text-xs text-foreground-muted mt-4 text-right">
+              统计更新: {gameStats.lastUpdated ? new Date(gameStats.lastUpdated).toLocaleString('zh-CN') : '未知'}
+            </p>
           </div>
 
           {/* 更新AI引用次数 */}

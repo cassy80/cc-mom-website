@@ -103,6 +103,16 @@ function newRound() {
   el("timer").textContent = "00:00";
   clearFeedback();
   el("roundLabel").textContent = `第 ${state.round} 题`;
+
+  // 记录游戏次数（只在第一局时记录）
+  if (state.round === 1) {
+    fetch('/api/game-stats', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gameId: '24-point', action: 'play' })
+    }).catch(() => {}); // 静默失败，不影响游戏
+  }
+
   render();
 }
 
