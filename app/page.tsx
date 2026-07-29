@@ -60,13 +60,13 @@ export default function Home() {
               }}
             />
             <FeatureCard
-              title="英语学习"
-              description="AI错题分析、趣味单词游戏、科学复习系统"
-              icon="📚"
-              href="/english"
+              title="游戏空间"
+              description="寓教于乐的益智游戏，培养孩子的逻辑思维和心算能力"
+              icon="🎮"
+              href="/games"
               stats={{
-                label: "学习工具",
-                value: "3个"
+                label: "益智游戏",
+                value: "1个"
               }}
             />
           </div>
