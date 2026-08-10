@@ -6,8 +6,24 @@ const suits = [
 ];
 
 const operatorLabels = { "+": "+", "-": "−", "*": "×", "/": "÷" };
+const STORAGE_KEYS = {
+  unlockedLevel: "game24-unlocked-level",
+  levelStars: "game24-level-stars",
+  challengeBest: "game24-challenge-best",
+};
+
+const levelPuzzles = [
+  [6, 6, 6, 6], [1, 2, 3, 4], [2, 4, 6, 8], [3, 3, 9, 9], [4, 4, 7, 9],
+  [2, 3, 4, 9], [1, 5, 5, 5], [2, 5, 7, 10], [3, 4, 5, 6], [1, 3, 8, 8],
+  [2, 2, 7, 7], [1, 4, 6, 8], [3, 5, 7, 9], [2, 3, 8, 10], [4, 5, 6, 9],
+  [1, 6, 7, 10], [2, 6, 8, 9], [3, 4, 7, 8], [1, 5, 8, 10], [2, 5, 5, 10],
+  [1, 3, 4, 6], [2, 3, 5, 9], [1, 4, 5, 6], [3, 3, 7, 8], [2, 4, 7, 7],
+  [1, 5, 7, 8], [2, 3, 7, 7], [3, 5, 6, 8], [3, 3, 8, 8], [2, 5, 8, 8],
+];
 
 const state = {
+  mode: null,
+  phase: "menu",
   cards: [],
   initialCards: [],
   selectedCardId: null,
@@ -15,12 +31,21 @@ const state = {
   lastOperation: null,
   history: [],
   solution: "",
+  solutionSteps: [],
+  hintIndex: 0,
   round: 0,
+  currentLevel: 1,
+  unlockedLevel: readNumber(STORAGE_KEYS.unlockedLevel, 1),
+  levelStars: readObject(STORAGE_KEYS.levelStars),
   score: 0,
   streak: 0,
   seconds: 0,
+  timeLeft: 60,
   sound: true,
   solved: false,
+  hintsUsed: 0,
+  timerId: null,
+  nextRoundId: null,
 };
 
 const el = (id) => document.getElementById(id);
@@ -28,6 +53,19 @@ const cardsEl = el("cards");
 const expressionEl = el("expression");
 const previewEl = el("resultPreview");
 const feedbackEl = el("feedback");
+
+function readNumber(key, fallback) {
+  const value = Number(localStorage.getItem(key));
+  return Number.isFinite(value) && value >= 0 ? value : fallback;
+}
+
+function readObject(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "{}");
+  } catch {
+    return {};
+  }
+}
 
 function rankLabel(value) {
   return value === 1 ? "A" : formatNumber(value);
@@ -38,24 +76,30 @@ function cardLabel(card) {
 }
 
 function solve24(values) {
-  const items = values.map((value) => ({ value, text: rankLabel(value) }));
+  return solve24WithSteps(values)?.text || null;
+}
+
+function solve24WithSteps(values) {
+  const items = values.map((value) => ({ value, text: rankLabel(value), steps: [] }));
   const search = (list) => {
-    if (list.length === 1) return Math.abs(list[0].value - 24) < 1e-9 ? list[0].text : null;
+    if (list.length === 1) return Math.abs(list[0].value - 24) < 1e-9 ? list[0] : null;
     for (let i = 0; i < list.length; i += 1) {
       for (let j = i + 1; j < list.length; j += 1) {
         const rest = list.filter((_, index) => index !== i && index !== j);
         const a = list[i];
         const b = list[j];
         const options = [
-          { value: a.value + b.value, text: `(${a.text}+${b.text})` },
-          { value: a.value - b.value, text: `(${a.text}-${b.text})` },
-          { value: b.value - a.value, text: `(${b.text}-${a.text})` },
-          { value: a.value * b.value, text: `(${a.text}×${b.text})` },
+          { value: a.value + b.value, text: `(${a.text}+${b.text})`, left: a, right: b, operator: "+" },
+          { value: a.value - b.value, text: `(${a.text}-${b.text})`, left: a, right: b, operator: "−" },
+          { value: b.value - a.value, text: `(${b.text}-${a.text})`, left: b, right: a, operator: "−" },
+          { value: a.value * b.value, text: `(${a.text}×${b.text})`, left: a, right: b, operator: "×" },
         ];
-        if (Math.abs(b.value) > 1e-9) options.push({ value: a.value / b.value, text: `(${a.text}÷${b.text})` });
-        if (Math.abs(a.value) > 1e-9) options.push({ value: b.value / a.value, text: `(${b.text}÷${a.text})` });
+        if (Math.abs(b.value) > 1e-9) options.push({ value: a.value / b.value, text: `(${a.text}÷${b.text})`, left: a, right: b, operator: "÷" });
+        if (Math.abs(a.value) > 1e-9) options.push({ value: b.value / a.value, text: `(${b.text}÷${a.text})`, left: b, right: a, operator: "÷" });
         for (const option of options) {
-          const result = search([...rest, option]);
+          const step = `${formatNumber(option.left.value)} ${option.operator} ${formatNumber(option.right.value)} = ${formatNumber(option.value)}`;
+          const next = { ...option, steps: [...option.left.steps, ...option.right.steps, step] };
+          const result = search([next, ...rest]);
           if (result) return result;
         }
       }
@@ -67,12 +111,12 @@ function solve24(values) {
 
 function generatePuzzle() {
   let values;
-  let solution;
+  let solved;
   do {
     values = Array.from({ length: 4 }, () => Math.floor(Math.random() * 10) + 1);
-    solution = solve24(values);
-  } while (!solution);
-  return { values, solution };
+    solved = solve24WithSteps(values);
+  } while (!solved);
+  return { values, solution: solved.text, solutionSteps: solved.steps };
 }
 
 function makeCard(value, index = 0, suit = null) {
@@ -88,32 +132,198 @@ function cloneCards(cards) {
   return cards.map((card) => ({ ...card, suit: { ...card.suit } }));
 }
 
-function newRound() {
-  const puzzle = generatePuzzle();
-  state.cards = puzzle.values.map((value, index) => makeCard(value, index));
+function loadPuzzle(values, solution, solutionSteps = null) {
+  const solved = solutionSteps ? null : solve24WithSteps(values);
+  state.cards = values.map((value, index) => makeCard(value, index));
   state.initialCards = cloneCards(state.cards);
-  state.solution = puzzle.solution;
+  state.solution = solution || solved?.text || "";
+  state.solutionSteps = solutionSteps || solved?.steps || [];
+  state.hintIndex = 0;
   state.selectedCardId = null;
   state.operator = null;
   state.lastOperation = null;
   state.history = [];
-  state.round += 1;
-  state.seconds = 0;
   state.solved = false;
-  el("timer").textContent = "00:00";
+  state.hintsUsed = 0;
+  el("hintButton").textContent = "给我提示";
   clearFeedback();
-  el("roundLabel").textContent = `第 ${state.round} 题`;
-
-  // 记录游戏次数（只在第一局时记录）
-  if (state.round === 1) {
-    fetch('/api/game-stats', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ gameId: '24-point', action: 'play' })
-    }).catch(() => {}); // 静默失败，不影响游戏
-  }
-
   render();
+}
+
+function showModeScreen() {
+  clearTimers();
+  state.mode = null;
+  state.phase = "menu";
+  el("modeScreen").hidden = false;
+  el("gameView").hidden = true;
+  el("homeButton").hidden = true;
+  el("levelsButton").hidden = true;
+  el("levelModal").hidden = true;
+  el("challengeResult").hidden = true;
+  el("countdownOverlay").hidden = true;
+  el("brandSubtitle").textContent = "选择一种玩法，开始数字冒险";
+  updateModeStatus();
+}
+
+function startProgressMode(level = state.unlockedLevel) {
+  clearTimers();
+  state.mode = "progress";
+  state.phase = "playing";
+  state.currentLevel = Math.min(Math.max(1, level), levelPuzzles.length);
+  state.seconds = 0;
+  state.score = totalStars();
+  state.streak = 0;
+  prepareGameView();
+  el("levelsButton").hidden = false;
+  el("levelProgress").hidden = false;
+  el("metricOneLabel").textContent = "关卡";
+  el("metricTwoLabel").textContent = "星星";
+  el("timerLabel").textContent = "用时";
+  el("brandSubtitle").textContent = "进阶闯关 · 一关一关解锁";
+  el("newGameButton").textContent = "重新开始";
+  loadProgressLevel();
+  startElapsedTimer();
+}
+
+function loadProgressLevel() {
+  const values = levelPuzzles[state.currentLevel - 1];
+  state.seconds = 0;
+  el("timer").textContent = "00:00";
+  el("timer").classList.remove("urgent");
+  el("roundLabel").textContent = `第 ${state.currentLevel} 关`;
+  el("levelProgressFill").style.width = `${(state.currentLevel / levelPuzzles.length) * 100}%`;
+  loadPuzzle(values, solve24(values));
+}
+
+function startChallengeMode() {
+  clearTimers();
+  state.mode = "challenge";
+  state.phase = "countdown";
+  state.score = 0;
+  state.streak = 0;
+  state.round = 0;
+  state.timeLeft = 60;
+  prepareGameView();
+  el("levelsButton").hidden = true;
+  el("levelProgress").hidden = true;
+  el("metricOneLabel").textContent = "答对";
+  el("metricTwoLabel").textContent = "连胜";
+  el("timerLabel").textContent = "倒计时";
+  el("brandSubtitle").textContent = "60秒挑战 · 和时间赛跑";
+  el("newGameButton").textContent = "换一题";
+  el("timer").textContent = "01:00";
+  loadChallengeRound();
+  runStartCountdown();
+}
+
+function prepareGameView() {
+  el("modeScreen").hidden = true;
+  el("gameView").hidden = false;
+  el("homeButton").hidden = false;
+  el("challengeResult").hidden = true;
+  el("timer").classList.remove("urgent");
+}
+
+function runStartCountdown() {
+  const overlay = el("countdownOverlay");
+  const number = el("countdownNumber");
+  overlay.hidden = false;
+  let count = 3;
+  number.textContent = count;
+  playTone(440, 0.1, 0.05);
+  state.timerId = setInterval(() => {
+    count -= 1;
+    if (count > 0) {
+      number.textContent = count;
+      number.classList.remove("pulse");
+      void number.offsetWidth;
+      number.classList.add("pulse");
+      playTone(440, 0.1, 0.05);
+      return;
+    }
+    clearInterval(state.timerId);
+    state.timerId = null;
+    number.textContent = "开始";
+    playTone(784, 0.2, 0.07);
+    setTimeout(() => {
+      overlay.hidden = true;
+      state.phase = "playing";
+      startChallengeTimer();
+      render();
+    }, 450);
+  }, 800);
+}
+
+function startElapsedTimer() {
+  state.timerId = setInterval(() => {
+    if (state.phase !== "playing" || state.solved) return;
+    state.seconds += 1;
+    el("timer").textContent = formatTime(state.seconds);
+  }, 1000);
+}
+
+function startChallengeTimer() {
+  state.timerId = setInterval(() => {
+    if (state.phase !== "playing") return;
+    state.timeLeft -= 1;
+    el("timer").textContent = formatTime(state.timeLeft);
+    if (state.timeLeft <= 10 && state.timeLeft > 0) showUrgentCountdown(state.timeLeft);
+    if (state.timeLeft <= 0) finishChallenge();
+  }, 1000);
+}
+
+function showUrgentCountdown(value) {
+  el("timer").classList.add("urgent");
+  const overlay = el("countdownOverlay");
+  const number = el("countdownNumber");
+  number.textContent = value;
+  number.classList.remove("pulse");
+  void number.offsetWidth;
+  number.classList.add("pulse");
+  overlay.classList.add("final-countdown");
+  overlay.hidden = false;
+  playTone(value <= 3 ? 760 : 520, 0.12, 0.055);
+  setTimeout(() => {
+    if (state.phase === "playing") overlay.hidden = true;
+  }, 420);
+}
+
+function loadChallengeRound() {
+  const puzzle = generatePuzzle();
+  state.round += 1;
+  el("roundLabel").textContent = `第 ${state.round} 题`;
+  loadPuzzle(puzzle.values, puzzle.solution, puzzle.solutionSteps);
+}
+
+function finishChallenge() {
+  clearTimers();
+  state.phase = "result";
+  state.solved = true;
+  state.timeLeft = 0;
+  el("timer").textContent = "00:00";
+  el("countdownOverlay").hidden = true;
+  el("countdownOverlay").classList.remove("final-countdown");
+  const previousBest = readNumber(STORAGE_KEYS.challengeBest, 0);
+  const isRecord = state.score > previousBest;
+  const best = Math.max(previousBest, state.score);
+  localStorage.setItem(STORAGE_KEYS.challengeBest, String(best));
+  el("finalScore").textContent = state.score;
+  el("recordMessage").textContent = isRecord && state.score > 0 ? `新纪录！之前最高 ${previousBest} 题` : `最高纪录：${best} 题`;
+  el("challengeResult").hidden = false;
+  render();
+}
+
+function clearTimers() {
+  if (state.timerId) clearInterval(state.timerId);
+  if (state.nextRoundId) clearTimeout(state.nextRoundId);
+  state.timerId = null;
+  state.nextRoundId = null;
+}
+
+function formatTime(seconds) {
+  const minutes = String(Math.floor(seconds / 60)).padStart(2, "0");
+  const remaining = String(seconds % 60).padStart(2, "0");
+  return `${minutes}:${remaining}`;
 }
 
 function renderCards() {
@@ -123,7 +333,7 @@ function renderCards() {
     button.type = "button";
     button.dataset.cardId = card.id;
     button.className = `card${card.suit.red ? " red" : ""}${card.id === state.selectedCardId ? " selected" : ""}${card.isResult ? " result-card" : ""}`;
-    button.disabled = state.solved;
+    button.disabled = state.solved || state.phase !== "playing";
     button.setAttribute("aria-pressed", String(card.id === state.selectedCardId));
     button.innerHTML = `
       <span class="card-rank">${cardLabel(card)}</span>
@@ -160,7 +370,7 @@ function renderExpression() {
 function renderOperators() {
   document.querySelectorAll("[data-token]").forEach((button) => {
     button.classList.toggle("selected", button.dataset.token === state.operator);
-    button.disabled = state.solved || !state.selectedCardId;
+    button.disabled = state.solved || state.phase !== "playing" || !state.selectedCardId;
   });
 }
 
@@ -168,16 +378,23 @@ function render() {
   renderCards();
   renderExpression();
   renderOperators();
-  el("undoButton").disabled = state.solved || (!state.history.length && !state.selectedCardId);
-  el("score").textContent = state.score;
-  el("streak").textContent = state.streak;
+  el("undoButton").disabled = state.solved || state.phase !== "playing" || (!state.history.length && !state.selectedCardId);
+  el("clearButton").disabled = state.solved || state.phase !== "playing";
+  el("hintButton").disabled = state.solved || state.phase !== "playing" || state.hintIndex >= state.solutionSteps.length;
+  el("newGameButton").disabled = state.phase !== "playing";
+  if (state.mode === "progress") {
+    el("score").textContent = state.currentLevel;
+    el("streak").textContent = totalStars();
+  } else {
+    el("score").textContent = state.score;
+    el("streak").textContent = state.streak;
+  }
 }
 
 function selectCard(id) {
-  if (state.solved) return;
+  if (state.solved || state.phase !== "playing") return;
   const card = state.cards.find((item) => item.id === id);
   if (!card) return;
-
   if (!state.selectedCardId) {
     state.selectedCardId = id;
     state.operator = null;
@@ -186,7 +403,6 @@ function selectCard(id) {
     render();
     return;
   }
-
   if (state.selectedCardId === id) {
     state.selectedCardId = null;
     state.operator = null;
@@ -194,7 +410,6 @@ function selectCard(id) {
     render();
     return;
   }
-
   if (!state.operator) {
     state.selectedCardId = id;
     showFeedback("已更换第一个数字，请选择运算符", "info");
@@ -202,12 +417,11 @@ function selectCard(id) {
     render();
     return;
   }
-
   calculatePair(card);
 }
 
 function selectOperator(value) {
-  if (state.solved) return;
+  if (state.solved || state.phase !== "playing") return;
   if (!state.selectedCardId) {
     showFeedback("请先点击一个数字", "error");
     playTone(150, 0.08);
@@ -227,31 +441,19 @@ function calculatePair(rightCard) {
     playTone(150, 0.12);
     return;
   }
-
   const result = calculate(leftCard.value, state.operator, rightCard.value);
-  state.history.push({
-    cards: cloneCards(state.cards),
-    lastOperation: state.lastOperation ? { ...state.lastOperation } : null,
-  });
-
+  state.history.push({ cards: cloneCards(state.cards), lastOperation: state.lastOperation ? { ...state.lastOperation } : null });
   const firstIndex = Math.min(state.cards.indexOf(leftCard), state.cards.indexOf(rightCard));
   const remaining = state.cards.filter((card) => card.id !== leftCard.id && card.id !== rightCard.id);
   const resultCard = makeCard(result, state.history.length, leftCard.suit);
   resultCard.isResult = true;
   remaining.splice(firstIndex, 0, resultCard);
-
   state.cards = remaining;
-  state.lastOperation = {
-    left: leftCard.value,
-    operator: state.operator,
-    right: rightCard.value,
-    result,
-  };
+  state.lastOperation = { left: leftCard.value, operator: state.operator, right: rightCard.value, result };
   state.selectedCardId = null;
   state.operator = null;
   clearFeedback();
   playMergeSound();
-
   if (state.cards.length === 1) finishRound(result);
   render();
 }
@@ -264,22 +466,44 @@ function calculate(left, operator, right) {
 }
 
 function finishRound(result) {
-  if (Math.abs(result - 24) < 1e-9) {
-    state.solved = true;
-    state.streak += 1;
-    state.score += Math.max(20, 100 - state.seconds) + Math.min(50, (state.streak - 1) * 10);
-    showFeedback("🎉 太棒了！你成功算出了 24！", "success");
-    celebrate();
-    playVictorySound();
-  } else {
-    state.streak = 0;
+  if (Math.abs(result - 24) >= 1e-9) {
+    if (state.mode === "challenge") state.streak = 0;
     showFeedback(`最后结果是 ${formatNumber(result)}，点击“撤销”再试一次吧！`, "error");
     playTone(150, 0.12);
+    return;
   }
+  state.solved = true;
+  showFeedback("太棒了！你成功算出了 24！", "success");
+  celebrate();
+  playVictorySound();
+  if (state.mode === "progress") finishProgressLevel();
+  if (state.mode === "challenge") finishChallengeRound();
+}
+
+function finishProgressLevel() {
+  const stars = state.hintsUsed === 0 && state.seconds <= 60 ? 3 : state.hintsUsed <= 1 ? 2 : 1;
+  state.levelStars[state.currentLevel] = Math.max(Number(state.levelStars[state.currentLevel] || 0), stars);
+  state.unlockedLevel = Math.min(levelPuzzles.length, Math.max(state.unlockedLevel, state.currentLevel + 1));
+  localStorage.setItem(STORAGE_KEYS.unlockedLevel, String(state.unlockedLevel));
+  localStorage.setItem(STORAGE_KEYS.levelStars, JSON.stringify(state.levelStars));
+  showFeedback(`过关！获得 ${"★".repeat(stars)}${"☆".repeat(3 - stars)}`, "success");
+  el("newGameButton").textContent = state.currentLevel === levelPuzzles.length ? "查看关卡" : "下一关";
+  el("newGameButton").disabled = false;
+  updateModeStatus();
+  render();
+}
+
+function finishChallengeRound() {
+  state.score += 1;
+  state.streak += 1;
+  render();
+  state.nextRoundId = setTimeout(() => {
+    if (state.mode === "challenge" && state.phase === "playing") loadChallengeRound();
+  }, 650);
 }
 
 function undo() {
-  if (state.solved) return;
+  if (state.solved || state.phase !== "playing") return;
   if (state.selectedCardId) {
     state.selectedCardId = null;
     state.operator = null;
@@ -293,14 +517,35 @@ function undo() {
 }
 
 function resetRound() {
-  if (state.solved) return;
+  if (state.phase !== "playing") return;
   state.cards = cloneCards(state.initialCards);
   state.selectedCardId = null;
   state.operator = null;
   state.lastOperation = null;
   state.history = [];
+  state.solved = false;
   clearFeedback();
   render();
+}
+
+function handleRoundAction() {
+  if (state.mode === "challenge") {
+    if (!state.solved) state.streak = 0;
+    if (state.nextRoundId) clearTimeout(state.nextRoundId);
+    loadChallengeRound();
+    return;
+  }
+  if (!state.solved) {
+    resetRound();
+    return;
+  }
+  if (state.currentLevel < levelPuzzles.length) {
+    state.currentLevel += 1;
+    el("newGameButton").textContent = "重新开始";
+    loadProgressLevel();
+  } else {
+    openLevelModal();
+  }
 }
 
 function formatNumber(number) {
@@ -319,9 +564,44 @@ function clearFeedback() {
 }
 
 function giveHint() {
-  showFeedback(`参考答案：${state.solution} = 24（按运算顺序逐步点击）`, "success");
-  state.score = Math.max(0, state.score - 10);
+  const step = state.solutionSteps[state.hintIndex];
+  if (!step) return;
+  state.hintsUsed += 1;
+  state.hintIndex += 1;
+  showFeedback(`线索 ${state.hintIndex}：${step}`, "info");
+  el("hintButton").textContent = state.hintIndex < state.solutionSteps.length ? "再给一个线索" : "线索已全部显示";
   render();
+}
+
+function totalStars() {
+  return Object.values(state.levelStars).reduce((sum, value) => sum + Number(value || 0), 0);
+}
+
+function updateModeStatus() {
+  el("progressStatus").textContent = `已解锁 ${state.unlockedLevel} / ${levelPuzzles.length} · 共 ${totalStars()} 星`;
+  el("challengeStatus").textContent = `最高纪录 ${readNumber(STORAGE_KEYS.challengeBest, 0)} 题`;
+}
+
+function openLevelModal() {
+  const grid = el("levelGrid");
+  grid.innerHTML = "";
+  levelPuzzles.forEach((_, index) => {
+    const level = index + 1;
+    const unlocked = level <= state.unlockedLevel;
+    const stars = Number(state.levelStars[level] || 0);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `level-button${level === state.currentLevel ? " current" : ""}`;
+    button.disabled = !unlocked;
+    button.setAttribute("aria-label", unlocked ? `第 ${level} 关，${stars} 星` : `第 ${level} 关，未解锁`);
+    button.innerHTML = `<strong>${level}</strong><span>${unlocked ? `${"★".repeat(stars)}${"☆".repeat(3 - stars)}` : "锁定"}</span>`;
+    button.addEventListener("click", () => {
+      el("levelModal").hidden = true;
+      startProgressMode(level);
+    });
+    grid.appendChild(button);
+  });
+  el("levelModal").hidden = false;
 }
 
 function celebrate() {
@@ -365,12 +645,9 @@ function playMergeSound() {
 }
 
 function playVictorySound() {
-  [523, 659, 784, 1047, 1319].forEach((frequency, index) => {
-    setTimeout(() => playTone(frequency, 0.22, 0.075, index === 4 ? "triangle" : "sine"), index * 105);
+  [523, 659, 784, 1047].forEach((frequency, index) => {
+    setTimeout(() => playTone(frequency, 0.18, 0.06, "triangle"), index * 80);
   });
-  setTimeout(() => {
-    [1047, 1319, 1568].forEach((frequency) => playTone(frequency, 0.5, 0.04, "triangle"));
-  }, 560);
 }
 
 document.querySelectorAll("[data-token]").forEach((button) => {
@@ -379,10 +656,14 @@ document.querySelectorAll("[data-token]").forEach((button) => {
 el("undoButton").addEventListener("click", undo);
 el("clearButton").addEventListener("click", resetRound);
 el("hintButton").addEventListener("click", giveHint);
-el("newGameButton").addEventListener("click", () => {
-  if (!state.solved) state.streak = 0;
-  newRound();
-});
+el("newGameButton").addEventListener("click", handleRoundAction);
+el("progressModeButton").addEventListener("click", () => startProgressMode());
+el("challengeModeButton").addEventListener("click", startChallengeMode);
+el("homeButton").addEventListener("click", showModeScreen);
+el("levelsButton").addEventListener("click", openLevelModal);
+el("closeLevelsButton").addEventListener("click", () => { el("levelModal").hidden = true; });
+el("retryChallengeButton").addEventListener("click", startChallengeMode);
+el("resultHomeButton").addEventListener("click", showModeScreen);
 el("soundButton").addEventListener("click", () => {
   state.sound = !state.sound;
   el("soundButton").classList.toggle("muted", !state.sound);
@@ -392,15 +673,12 @@ el("soundButton").addEventListener("click", () => {
 document.addEventListener("keydown", (event) => {
   if (["+", "-", "*", "/"].includes(event.key)) selectOperator(event.key);
   if (event.key === "Backspace") undo();
-  if (event.key === "Escape") resetRound();
+  if (event.key === "Escape") {
+    if (!el("levelModal").hidden) el("levelModal").hidden = true;
+    else if (state.mode) showModeScreen();
+  }
 });
 
-setInterval(() => {
-  if (state.solved) return;
-  state.seconds += 1;
-  const minutes = String(Math.floor(state.seconds / 60)).padStart(2, "0");
-  const seconds = String(state.seconds % 60).padStart(2, "0");
-  el("timer").textContent = `${minutes}:${seconds}`;
-}, 1000);
-
-newRound();
+state.unlockedLevel = Math.min(Math.max(1, state.unlockedLevel), levelPuzzles.length);
+updateModeStatus();
+showModeScreen();

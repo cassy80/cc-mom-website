@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#123c32" />
     <title>24点 · 扑克牌挑战</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=5" />
   </head>
   <body>
     <main class="game-shell">
@@ -14,56 +14,124 @@
           <span class="brand-mark">24</span>
           <div>
             <h1>24点挑战</h1>
-            <p>点击数字和运算符，一步一步算出 24</p>
+            <p id="brandSubtitle">选择一种玩法，开始数字冒险</p>
           </div>
         </div>
-        <button class="icon-button" id="soundButton" type="button" aria-label="开关音效" title="开关音效">♪</button>
+        <div class="top-actions">
+          <button class="top-action home-action" id="homeButton" type="button" hidden><span aria-hidden="true">←</span> 返回主页</button>
+          <button class="top-action" id="levelsButton" type="button" hidden>选择关卡</button>
+          <button class="icon-button" id="soundButton" type="button" aria-label="开关音效" title="开关音效">♪</button>
+        </div>
       </header>
 
-      <section class="scoreboard" aria-label="游戏数据">
-        <div><span>得分</span><strong id="score">0</strong></div>
-        <div><span>连胜</span><strong id="streak">0</strong></div>
-        <div><span>用时</span><strong id="timer">00:00</strong></div>
+      <section class="mode-screen" id="modeScreen" aria-labelledby="modeTitle">
+        <div class="mode-heading">
+          <span class="eyebrow">选择玩法</span>
+          <h2 id="modeTitle">今天想怎么挑战？</h2>
+        </div>
+
+        <div class="mode-options">
+          <button class="mode-option progress-option" id="progressModeButton" type="button">
+            <span class="mode-icon" aria-hidden="true">♟</span>
+            <span class="mode-copy">
+              <strong>进阶版</strong>
+              <small>一关一关解锁，越往后越烧脑</small>
+              <span class="mode-status" id="progressStatus">已解锁 1 / 30</span>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">→</span>
+          </button>
+
+          <button class="mode-option challenge-option" id="challengeModeButton" type="button">
+            <span class="mode-icon" aria-hidden="true">60</span>
+            <span class="mode-copy">
+              <strong>挑战版</strong>
+              <small>在倒计时结束前，尽可能多地答题</small>
+              <span class="mode-status" id="challengeStatus">最高纪录 0 题</span>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
       </section>
 
-      <section class="table" aria-label="牌桌">
-        <div class="table-copy">
-          <span class="round-label" id="roundLabel">第 1 题</span>
-          <h2>让结果等于 <em>24</em></h2>
-          <p>先点数字，再点运算符，最后点另一个数字</p>
+      <section class="game-view" id="gameView" hidden>
+        <section class="scoreboard" aria-label="游戏数据">
+          <div><span id="metricOneLabel">关卡</span><strong id="score">1</strong></div>
+          <div><span id="metricTwoLabel">星星</span><strong id="streak">0</strong></div>
+          <div class="timer-metric"><span id="timerLabel">用时</span><strong id="timer">00:00</strong></div>
+        </section>
+
+        <div class="level-progress" id="levelProgress" aria-label="闯关进度">
+          <div id="levelProgressFill"></div>
         </div>
 
-        <div class="cards" id="cards" aria-label="本题扑克牌"></div>
-
-        <div class="expression-panel">
-          <span class="expression-label">本步运算</span>
-          <div class="expression" id="expression" aria-live="polite">
-            <span class="placeholder">请先点击一个数字</span>
+        <section class="table" aria-label="牌桌">
+          <div class="table-copy">
+            <span class="round-label" id="roundLabel">第 1 关</span>
+            <h2>让结果等于 <em>24</em></h2>
+            <p>先点数字，再点运算符，最后点另一个数字</p>
           </div>
-          <div class="result-preview" id="resultPreview">结果：—</div>
-        </div>
 
-        <div class="keypad" aria-label="运算按钮">
-          <button data-token="+" type="button">＋</button>
-          <button data-token="-" type="button">−</button>
-          <button data-token="*" type="button">×</button>
-          <button data-token="/" type="button">÷</button>
-          <button class="utility" id="undoButton" type="button">撤销</button>
-          <button class="utility" id="clearButton" type="button">重置本题</button>
-        </div>
+          <div class="cards" id="cards" aria-label="本题扑克牌"></div>
 
-        <div class="feedback" id="feedback" aria-live="assertive"></div>
+          <div class="expression-panel">
+            <span class="expression-label">本步运算</span>
+            <div class="expression" id="expression" aria-live="polite">
+              <span class="placeholder">请先点击一个数字</span>
+            </div>
+            <div class="result-preview" id="resultPreview">结果：—</div>
+          </div>
 
-        <div class="primary-actions">
-          <button class="secondary-button" id="hintButton" type="button">给我提示</button>
-          <button class="secondary-button" id="newGameButton" type="button">换一题</button>
-        </div>
+          <div class="keypad" aria-label="运算按钮">
+            <button data-token="+" type="button" aria-label="加">＋</button>
+            <button data-token="-" type="button" aria-label="减">−</button>
+            <button data-token="*" type="button" aria-label="乘">×</button>
+            <button data-token="/" type="button" aria-label="除">÷</button>
+            <button class="utility" id="undoButton" type="button">撤销</button>
+            <button class="utility" id="clearButton" type="button">重置本题</button>
+          </div>
+
+          <div class="feedback" id="feedback" aria-live="assertive"></div>
+
+          <div class="primary-actions">
+            <button class="secondary-button" id="hintButton" type="button">给我提示</button>
+            <button class="secondary-button" id="newGameButton" type="button">换一题</button>
+          </div>
+        </section>
       </section>
 
       <footer>牌面范围 A～10 · A 代表 1</footer>
     </main>
 
+    <div class="countdown-overlay" id="countdownOverlay" aria-live="assertive" hidden>
+      <span id="countdownNumber">3</span>
+    </div>
+
+    <div class="modal-backdrop" id="levelModal" role="dialog" aria-modal="true" aria-labelledby="levelModalTitle" hidden>
+      <div class="dialog level-dialog">
+        <div class="dialog-heading">
+          <div>
+            <span class="eyebrow">进阶闯关</span>
+            <h2 id="levelModalTitle">选择关卡</h2>
+          </div>
+          <button class="close-button" id="closeLevelsButton" type="button" aria-label="关闭">×</button>
+        </div>
+        <div class="level-grid" id="levelGrid"></div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="challengeResult" role="dialog" aria-modal="true" aria-labelledby="resultTitle" hidden>
+      <div class="dialog result-dialog">
+        <span class="result-badge">时间到</span>
+        <h2 id="resultTitle">本次答对 <em id="finalScore">0</em> 题</h2>
+        <p id="recordMessage">最高纪录：0 题</p>
+        <div class="result-actions">
+          <button class="primary-button" id="retryChallengeButton" type="button">再挑战一次</button>
+          <button class="secondary-button" id="resultHomeButton" type="button">返回主页</button>
+        </div>
+      </div>
+    </div>
+
     <div class="celebration" id="celebration" aria-hidden="true"></div>
-    <script src="game.js"></script>
+    <script src="game.js?v=5"></script>
   </body>
 </html>

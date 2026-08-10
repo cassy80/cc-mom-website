@@ -25,6 +25,7 @@ body {
 }
 
 button { font: inherit; }
+[hidden] { display: none !important; }
 
 .game-shell {
   width: min(980px, 100%);
@@ -35,7 +36,16 @@ button { font: inherit; }
   flex-direction: column;
 }
 
-.topbar { display: flex; align-items: center; justify-content: space-between; color: white; }
+.topbar { position: relative; display: flex; align-items: center; justify-content: space-between; color: white; }
+.top-actions { display: flex; align-items: center; gap: 8px; }
+.top-action {
+  min-height: 40px; padding: 0 13px; border: 1px solid rgba(255,255,255,.22);
+  border-radius: 9px; background: rgba(255,255,255,.07); color: white; cursor: pointer;
+  font-size: 12px; font-weight: 700;
+}
+.top-action:hover { background: rgba(255,255,255,.14); }
+.home-action { position: relative; z-index: 40; background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.38); }
+.home-action span { margin-right: 4px; font-size: 17px; }
 .brand { display: flex; align-items: center; gap: 14px; }
 .brand-mark {
   display: grid; place-items: center; width: 56px; height: 68px;
@@ -51,6 +61,33 @@ button { font: inherit; }
 }
 .icon-button.muted { opacity: .45; text-decoration: line-through; }
 
+.mode-screen {
+  flex: 1; display: grid; align-content: center; gap: 28px; padding: 54px 0 70px;
+}
+.mode-heading { color: white; text-align: center; }
+.eyebrow { color: var(--gold); font-size: 11px; font-weight: 900; letter-spacing: .15em; }
+.mode-heading h2 { margin: 8px 0 0; font-size: clamp(28px, 5vw, 46px); letter-spacing: 0; }
+.mode-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.mode-option {
+  position: relative; min-height: 210px; padding: 27px; border: 1px solid rgba(255,255,255,.18);
+  border-radius: 8px; color: white; text-align: left; cursor: pointer; overflow: hidden;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+.progress-option { background: #1e5a49; }
+.challenge-option { background: #713d38; }
+.mode-option:hover { transform: translateY(-4px); border-color: rgba(255,255,255,.5); }
+.mode-icon {
+  display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%;
+  background: rgba(255,255,255,.12); font: 900 20px/1 Georgia, serif;
+}
+.mode-copy { display: grid; gap: 5px; }
+.mode-copy strong { font-size: 25px; }
+.mode-copy small { color: rgba(255,255,255,.67); font-size: 13px; }
+.mode-status { margin-top: 5px; color: var(--gold); font-size: 12px; font-weight: 800; }
+.mode-arrow { position: absolute; right: 25px; top: 29px; font-size: 25px; }
+.game-view { flex: 1; display: flex; flex-direction: column; }
+
 .scoreboard {
   margin: 22px auto 18px; display: grid; grid-template-columns: repeat(3, minmax(88px, 140px));
   text-align: center; color: white;
@@ -59,6 +96,9 @@ button { font: inherit; }
 .scoreboard div:last-child { border: 0; }
 .scoreboard span { display: block; color: rgba(255,255,255,.58); font-size: 12px; letter-spacing: .15em; }
 .scoreboard strong { font-size: 25px; font-variant-numeric: tabular-nums; }
+.timer-metric strong.urgent { color: #ff7a70; animation: timer-pulse .7s ease infinite; }
+.level-progress { height: 4px; max-width: 420px; width: 70%; margin: -7px auto 14px; background: rgba(255,255,255,.14); border-radius: 4px; overflow: hidden; }
+.level-progress div { height: 100%; width: 0; background: var(--gold); transition: width .3s ease; }
 
 .table {
   position: relative; flex: 1; background: var(--cream); border-radius: 28px;
@@ -140,19 +180,79 @@ button { font: inherit; }
 .submit-button:hover { background: var(--green-2); }
 .secondary-button { border: 1px solid var(--line); color: var(--green); background: transparent; }
 .secondary-button:hover { background: rgba(23,78,64,.06); }
+.primary-button {
+  border: 0; color: white; background: var(--green); box-shadow: 0 4px 0 #0c3329;
+  min-width: 128px; padding: 12px 19px; border-radius: 10px; cursor: pointer; font-weight: 800;
+}
 footer { padding-top: 12px; color: rgba(255,255,255,.45); text-align: center; font-size: 12px; }
+
+.countdown-overlay {
+  position: fixed; inset: 0; z-index: 20; display: grid; place-items: center;
+  background: rgba(7,31,26,.82); backdrop-filter: blur(3px); pointer-events: none;
+}
+.countdown-overlay.final-countdown { background: rgba(86,26,23,.32); backdrop-filter: none; }
+.countdown-overlay span {
+  color: white; font: 900 clamp(82px, 22vw, 180px)/1 Georgia, serif;
+  text-shadow: 0 10px 35px rgba(0,0,0,.4); font-variant-numeric: tabular-nums;
+}
+.countdown-overlay span.pulse { animation: countdown-pop .42s ease-out; }
+
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 18px;
+  background: rgba(6,25,21,.76); backdrop-filter: blur(5px);
+}
+.dialog {
+  width: min(620px, 100%); max-height: min(720px, 90vh); overflow: auto;
+  border-radius: 8px; background: var(--cream); color: var(--ink); padding: 28px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.38);
+}
+.dialog-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.dialog-heading h2 { margin: 5px 0 20px; }
+.close-button {
+  width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%;
+  background: transparent; color: var(--ink); cursor: pointer; font-size: 25px;
+}
+.level-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 9px; }
+.level-button {
+  aspect-ratio: 1; border: 1px solid var(--line); border-radius: 7px; background: var(--paper);
+  color: var(--ink); cursor: pointer; display: grid; place-content: center; gap: 3px;
+}
+.level-button strong { font-size: 18px; }
+.level-button span { color: var(--gold); font-size: 9px; white-space: nowrap; }
+.level-button.current { outline: 3px solid var(--gold); }
+.level-button:disabled { opacity: .42; cursor: not-allowed; }
+.result-dialog { max-width: 450px; text-align: center; }
+.result-badge { display: inline-block; color: var(--red); font-size: 12px; font-weight: 900; letter-spacing: .14em; }
+.result-dialog h2 { margin: 13px 0 8px; font-size: 25px; }
+.result-dialog h2 em { color: var(--red); font: 900 1.4em Georgia, serif; font-style: normal; }
+.result-dialog p { color: var(--muted); }
+.result-actions { margin-top: 22px; display: flex; justify-content: center; gap: 10px; }
+.result-actions .secondary-button { min-width: 112px; padding: 12px 18px; border-radius: 10px; cursor: pointer; font-weight: 800; }
 
 .celebration { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
 .confetti { position: absolute; top: -20px; width: 10px; height: 16px; animation: fall 2.15s ease-in forwards; }
 @keyframes fall { to { transform: translate(var(--drift), 105vh) rotate(900deg); opacity: .15; } }
 @keyframes pop { 35% { transform: scale(1.035); box-shadow: 0 0 0 8px rgba(238,189,98,.45), 0 24px 55px rgba(0,0,0,.28); } }
 @keyframes merge-in { from { opacity: .2; transform: scale(.65) rotate(-5deg); } 70% { transform: scale(1.08) rotate(2deg); } }
+@keyframes countdown-pop { from { transform: scale(.45); opacity: .1; } 65% { transform: scale(1.15); } }
+@keyframes timer-pulse { 50% { transform: scale(1.12); } }
 .table.win { animation: pop .65s ease; }
 
 @media (max-width: 560px) {
   .game-shell { padding: 14px 12px 12px; }
   .brand-mark { width: 45px; height: 55px; }
   .brand p { display: none; }
+  .top-actions { gap: 5px; }
+  .top-action { width: 40px; padding: 0; overflow: hidden; color: transparent; position: relative; }
+  .top-action::after { position: absolute; inset: 0; display: grid; place-items: center; color: white; font-size: 17px; }
+  #homeButton { width: auto; min-width: 76px; padding: 0 10px; color: white; }
+  #homeButton::after { content: none; }
+  #homeButton span { margin-right: 2px; }
+  #levelsButton::after { content: "▦"; }
+  .mode-screen { padding: 32px 0 44px; }
+  .mode-options { grid-template-columns: 1fr; gap: 12px; }
+  .mode-option { min-height: 154px; padding: 20px; }
+  .mode-copy strong { font-size: 21px; }
   .scoreboard { margin: 15px auto 13px; }
   .scoreboard div { padding: 0 16px; }
   .table { border-radius: 22px; padding-top: 20px; }
@@ -162,4 +262,7 @@ footer { padding-top: 12px; color: rgba(255,255,255,.45); text-align: center; fo
   .card-suit-small { left: 8px; top: 28px; }
   .keypad button { min-width: 43px; padding: 0 10px; }
   .primary-actions button { min-width: 96px; padding-inline: 12px; }
+  .level-grid { grid-template-columns: repeat(5, 1fr); }
+  .dialog { padding: 22px 18px; }
+  .result-actions { flex-direction: column; }
 }
