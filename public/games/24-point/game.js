@@ -380,7 +380,7 @@ function render() {
   renderOperators();
   el("undoButton").disabled = state.solved || state.phase !== "playing" || (!state.history.length && !state.selectedCardId);
   el("clearButton").disabled = state.solved || state.phase !== "playing";
-  el("hintButton").disabled = state.solved || state.phase !== "playing" || state.hintIndex >= state.solutionSteps.length;
+  el("hintButton").disabled = state.solved || state.phase !== "playing";
   el("newGameButton").disabled = state.phase !== "playing";
   if (state.mode === "progress") {
     el("score").textContent = state.currentLevel;
@@ -565,7 +565,15 @@ function clearFeedback() {
 
 function giveHint() {
   const step = state.solutionSteps[state.hintIndex];
-  if (!step) return;
+  if (!step) {
+    const lastStep = state.solutionSteps[state.solutionSteps.length - 1];
+    const message = lastStep
+      ? `本题线索已经全部显示。最后一条线索：${lastStep}`
+      : "这道题暂时没有可用线索，请点击换一题。";
+    showFeedback(message, "info");
+    playTone(360, 0.08, 0.035);
+    return;
+  }
   state.hintsUsed += 1;
   state.hintIndex += 1;
   showFeedback(`线索 ${state.hintIndex}：${step}`, "info");
