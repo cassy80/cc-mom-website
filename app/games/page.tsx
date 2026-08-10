@@ -9,8 +9,8 @@ export default function GamesPage() {
       name: '24点扑克牌挑战',
       description: '经典数学思维游戏，用加减乘除让4张牌算出24，培养孩子的逻辑思维和心算能力',
       icon: '🎴',
-      href: '/games/24-point/index.html',
-      tags: ['数学思维', '心算训练', '亲子互动'],
+      href: '/24game/play',
+      tags: ['数学思维', '心算训练', '专属链接进入'],
       difficulty: '适合8岁+',
     },
     // 未来可以在这里添加更多游戏
