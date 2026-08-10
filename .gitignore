@@ -29,6 +29,9 @@ yarn-error.log*
 .env*.local
 .env
 
+# 24点付费专属链接（包含客户访问凭证，禁止提交）
+data/24game-links.json
+
 # Vercel
 .vercel
 
