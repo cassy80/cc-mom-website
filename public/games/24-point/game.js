@@ -14,11 +14,11 @@ const STORAGE_KEYS = {
 
 const levelPuzzles = [
   [6, 6, 6, 6], [1, 2, 3, 4], [2, 4, 6, 8], [3, 3, 9, 9], [4, 4, 7, 9],
-  [2, 3, 4, 9], [1, 5, 5, 5], [2, 5, 7, 10], [3, 4, 5, 6], [1, 3, 8, 8],
+  [2, 3, 4, 9], [1, 1, 4, 10], [2, 5, 7, 10], [3, 4, 5, 6], [1, 3, 8, 8],
   [2, 2, 7, 7], [1, 4, 6, 8], [3, 5, 7, 9], [2, 3, 8, 10], [4, 5, 6, 9],
-  [1, 6, 7, 10], [2, 6, 8, 9], [3, 4, 7, 8], [1, 5, 8, 10], [2, 5, 5, 10],
-  [1, 3, 4, 6], [2, 3, 5, 9], [1, 4, 5, 6], [3, 3, 7, 8], [2, 4, 7, 7],
-  [1, 5, 7, 8], [2, 3, 7, 7], [3, 5, 6, 8], [3, 3, 8, 8], [2, 5, 8, 8],
+  [1, 6, 7, 10], [2, 6, 8, 9], [3, 4, 7, 8], [1, 5, 8, 10], [1, 1, 6, 9],
+  [1, 1, 7, 10], [2, 3, 5, 9], [1, 2, 8, 10], [3, 3, 7, 8], [2, 4, 7, 7],
+  [1, 5, 7, 8], [2, 3, 7, 7], [3, 5, 6, 8], [5, 6, 7, 9], [1, 3, 9, 10],
   [1, 1, 5, 7], [1, 3, 3, 10], [1, 3, 3, 6], [1, 3, 4, 10], [1, 4, 6, 7],
   [1, 6, 8, 8], [2, 2, 3, 3], [2, 2, 5, 5], [2, 3, 5, 10], [2, 3, 5, 8],
   [2, 4, 4, 7], [2, 5, 5, 9], [2, 6, 7, 8], [2, 8, 8, 8], [2, 8, 9, 10],
@@ -32,7 +32,7 @@ const levelPuzzles = [
   [5, 5, 10, 10], [5, 5, 5, 5], [5, 5, 8, 8], [5, 5, 9, 9], [2, 5, 6, 9],
   [3, 6, 7, 10], [4, 5, 10, 10], [4, 7, 8, 10], [5, 7, 10, 10], [6, 9, 9, 10],
   [1, 1, 6, 8], [6, 6, 8, 8], [6, 7, 8, 9], [7, 8, 9, 10], [1, 3, 7, 9],
-  [1, 6, 6, 8], [2, 4, 10, 10], [2, 7, 7, 10], [3, 3, 7, 7], [4, 4, 7, 7],
+  [1, 4, 6, 10], [2, 4, 5, 5], [2, 5, 7, 8], [2, 7, 8, 9], [4, 5, 7, 10],
 ];
 
 const state = {
@@ -93,71 +93,34 @@ function solve24(values) {
   return solve24WithSteps(values)?.text || null;
 }
 
-function gcd(a, b) {
-  return b ? gcd(b, a % b) : Math.abs(a);
-}
-
-function makeFraction(numerator, denominator = 1) {
-  if (denominator < 0) {
-    numerator *= -1;
-    denominator *= -1;
-  }
-  const divisor = gcd(numerator, denominator) || 1;
-  return { numerator: numerator / divisor, denominator: denominator / divisor };
-}
-
-function fractionLabel(item) {
-  return item.denominator === 1 ? String(item.numerator) : `${item.numerator}/${item.denominator}`;
-}
-
 function solve24WithSteps(values) {
-  const items = values.map((value) => ({ ...makeFraction(value), text: rankLabel(value), steps: [] }));
-  const search = (list, allowFractions) => {
-    if (list.length === 1) return list[0].numerator === 24 * list[0].denominator ? list[0] : null;
+  const items = values.map((value) => ({ value, text: rankLabel(value), steps: [] }));
+  const search = (list) => {
+    if (list.length === 1) return list[0].value === 24 ? list[0] : null;
     for (let i = 0; i < list.length; i += 1) {
       for (let j = i + 1; j < list.length; j += 1) {
         const rest = list.filter((_, index) => index !== i && index !== j);
         const a = list[i];
         const b = list[j];
-        const add = makeFraction(
-          a.numerator * b.denominator + b.numerator * a.denominator,
-          a.denominator * b.denominator,
-        );
-        const multiply = makeFraction(a.numerator * b.numerator, a.denominator * b.denominator);
         const options = [
-          { ...multiply, text: `(${a.text}×${b.text})`, left: a, right: b, operator: "×" },
-          { ...add, text: `(${a.text}+${b.text})`, left: a, right: b, operator: "+" },
+          { value: a.value * b.value, text: `(${a.text}×${b.text})`, left: a, right: b, operator: "×" },
+          { value: a.value + b.value, text: `(${a.text}+${b.text})`, left: a, right: b, operator: "+" },
         ];
-        const comparison = a.numerator * b.denominator - b.numerator * a.denominator;
-        if (comparison >= 0) {
-          const subtract = makeFraction(comparison, a.denominator * b.denominator);
-          options.push({ ...subtract, text: `(${a.text}-${b.text})`, left: a, right: b, operator: "−" });
-        }
-        if (comparison <= 0 && comparison !== 0) {
-          const subtract = makeFraction(-comparison, a.denominator * b.denominator);
-          options.push({ ...subtract, text: `(${b.text}-${a.text})`, left: b, right: a, operator: "−" });
-        }
-        if (b.numerator !== 0) {
-          const divide = makeFraction(a.numerator * b.denominator, a.denominator * b.numerator);
-          options.push({ ...divide, text: `(${a.text}÷${b.text})`, left: a, right: b, operator: "÷" });
-        }
-        if (a.numerator !== 0 && comparison !== 0) {
-          const divide = makeFraction(b.numerator * a.denominator, b.denominator * a.numerator);
-          options.push({ ...divide, text: `(${b.text}÷${a.text})`, left: b, right: a, operator: "÷" });
-        }
-        options.sort((left, right) => Number(left.denominator !== 1) - Number(right.denominator !== 1));
+        if (a.value >= b.value) options.push({ value: a.value - b.value, text: `(${a.text}-${b.text})`, left: a, right: b, operator: "−" });
+        if (b.value > a.value) options.push({ value: b.value - a.value, text: `(${b.text}-${a.text})`, left: b, right: a, operator: "−" });
+        if (b.value !== 0 && a.value % b.value === 0) options.push({ value: a.value / b.value, text: `(${a.text}÷${b.text})`, left: a, right: b, operator: "÷" });
+        if (a.value !== 0 && b.value % a.value === 0 && a.value !== b.value) options.push({ value: b.value / a.value, text: `(${b.text}÷${a.text})`, left: b, right: a, operator: "÷" });
         for (const option of options) {
-          if (!allowFractions && option.denominator !== 1) continue;
-          const step = `${fractionLabel(option.left)} ${option.operator} ${fractionLabel(option.right)} = ${fractionLabel(option)}`;
+          const step = `${option.left.value} ${option.operator} ${option.right.value} = ${option.value}`;
           const next = { ...option, steps: [...option.left.steps, ...option.right.steps, step] };
-          const result = search([next, ...rest], allowFractions);
+          const result = search([next, ...rest]);
           if (result) return result;
         }
       }
     }
     return null;
   };
-  return search(items, false) || search(items, true);
+  return search(items);
 }
 
 function generatePuzzle() {
@@ -489,6 +452,16 @@ function calculatePair(rightCard) {
   if (!leftCard || !state.operator) return;
   if (state.operator === "/" && Math.abs(rightCard.value) < 1e-9) {
     showFeedback("除数不能为 0", "error");
+    playTone(150, 0.12);
+    return;
+  }
+  if (state.operator === "-" && leftCard.value < rightCard.value) {
+    showFeedback("不能产生负数，请换一下数字顺序", "error");
+    playTone(150, 0.12);
+    return;
+  }
+  if (state.operator === "/" && leftCard.value % rightCard.value !== 0) {
+    showFeedback("不能产生分数或小数，请选择能够整除的数字", "error");
     playTone(150, 0.12);
     return;
   }
