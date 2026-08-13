@@ -93,34 +93,71 @@ function solve24(values) {
   return solve24WithSteps(values)?.text || null;
 }
 
+function gcd(a, b) {
+  return b ? gcd(b, a % b) : Math.abs(a);
+}
+
+function makeFraction(numerator, denominator = 1) {
+  if (denominator < 0) {
+    numerator *= -1;
+    denominator *= -1;
+  }
+  const divisor = gcd(numerator, denominator) || 1;
+  return { numerator: numerator / divisor, denominator: denominator / divisor };
+}
+
+function fractionLabel(item) {
+  return item.denominator === 1 ? String(item.numerator) : `${item.numerator}/${item.denominator}`;
+}
+
 function solve24WithSteps(values) {
-  const items = values.map((value) => ({ value, text: rankLabel(value), steps: [] }));
-  const search = (list) => {
-    if (list.length === 1) return Math.abs(list[0].value - 24) < 1e-9 ? list[0] : null;
+  const items = values.map((value) => ({ ...makeFraction(value), text: rankLabel(value), steps: [] }));
+  const search = (list, allowFractions) => {
+    if (list.length === 1) return list[0].numerator === 24 * list[0].denominator ? list[0] : null;
     for (let i = 0; i < list.length; i += 1) {
       for (let j = i + 1; j < list.length; j += 1) {
         const rest = list.filter((_, index) => index !== i && index !== j);
         const a = list[i];
         const b = list[j];
+        const add = makeFraction(
+          a.numerator * b.denominator + b.numerator * a.denominator,
+          a.denominator * b.denominator,
+        );
+        const multiply = makeFraction(a.numerator * b.numerator, a.denominator * b.denominator);
         const options = [
-          { value: a.value + b.value, text: `(${a.text}+${b.text})`, left: a, right: b, operator: "+" },
-          { value: a.value - b.value, text: `(${a.text}-${b.text})`, left: a, right: b, operator: "−" },
-          { value: b.value - a.value, text: `(${b.text}-${a.text})`, left: b, right: a, operator: "−" },
-          { value: a.value * b.value, text: `(${a.text}×${b.text})`, left: a, right: b, operator: "×" },
+          { ...multiply, text: `(${a.text}×${b.text})`, left: a, right: b, operator: "×" },
+          { ...add, text: `(${a.text}+${b.text})`, left: a, right: b, operator: "+" },
         ];
-        if (Math.abs(b.value) > 1e-9) options.push({ value: a.value / b.value, text: `(${a.text}÷${b.text})`, left: a, right: b, operator: "÷" });
-        if (Math.abs(a.value) > 1e-9) options.push({ value: b.value / a.value, text: `(${b.text}÷${a.text})`, left: b, right: a, operator: "÷" });
+        const comparison = a.numerator * b.denominator - b.numerator * a.denominator;
+        if (comparison >= 0) {
+          const subtract = makeFraction(comparison, a.denominator * b.denominator);
+          options.push({ ...subtract, text: `(${a.text}-${b.text})`, left: a, right: b, operator: "−" });
+        }
+        if (comparison <= 0 && comparison !== 0) {
+          const subtract = makeFraction(-comparison, a.denominator * b.denominator);
+          options.push({ ...subtract, text: `(${b.text}-${a.text})`, left: b, right: a, operator: "−" });
+        }
+        if (b.numerator !== 0) {
+          const divide = makeFraction(a.numerator * b.denominator, a.denominator * b.numerator);
+          options.push({ ...divide, text: `(${a.text}÷${b.text})`, left: a, right: b, operator: "÷" });
+        }
+        if (a.numerator !== 0 && comparison !== 0) {
+          const divide = makeFraction(b.numerator * a.denominator, b.denominator * a.numerator);
+          options.push({ ...divide, text: `(${b.text}÷${a.text})`, left: b, right: a, operator: "÷" });
+        }
+        options.sort((left, right) => Number(left.denominator !== 1) - Number(right.denominator !== 1));
         for (const option of options) {
-          const step = `${formatNumber(option.left.value)} ${option.operator} ${formatNumber(option.right.value)} = ${formatNumber(option.value)}`;
+          if (!allowFractions && option.denominator !== 1) continue;
+          const step = `${fractionLabel(option.left)} ${option.operator} ${fractionLabel(option.right)} = ${fractionLabel(option)}`;
           const next = { ...option, steps: [...option.left.steps, ...option.right.steps, step] };
-          const result = search([next, ...rest]);
+          const result = search([next, ...rest], allowFractions);
           if (result) return result;
         }
       }
     }
     return null;
   };
-  return search(items);
+  return search(items, false) || search(items, true);
 }
 
 function generatePuzzle() {
