@@ -8,6 +8,7 @@ export default function DownloadButton({ pdfUrl }: { pdfUrl: string }) {
 
   const download = async () => {
     setMessage("正在准备下载，请稍候…");
+    const slowTimer = window.setTimeout(() => setMessage("文件较大，内置浏览器下载可能较慢；也可以点击“在浏览器中打开”。"), 8_000);
     try {
       const response = await fetch(`${pdfUrl}?download=1`, { cache: "no-store" });
       if (!response.ok) throw new Error("Download request failed");
@@ -20,8 +21,10 @@ export default function DownloadButton({ pdfUrl }: { pdfUrl: string }) {
       link.click();
       link.remove();
       window.setTimeout(() => URL.revokeObjectURL(blobUrl), 30_000);
+      window.clearTimeout(slowTimer);
       setMessage("已触发下载；如果没有出现文件，请点击“在浏览器中打开”。");
     } catch {
+      window.clearTimeout(slowTimer);
       setMessage("当前内置浏览器不支持直接下载，请点击“在浏览器中打开”。");
     }
   };
