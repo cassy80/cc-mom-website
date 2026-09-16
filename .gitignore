@@ -69,3 +69,9 @@ logs/
 # Build artifacts
 .cache/
 .turbo/
+
+# Production process configuration can contain deployment secrets.
+ecosystem.config.js
+
+# One-off source backups created during server maintenance.
+*.before-*

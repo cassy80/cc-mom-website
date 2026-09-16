@@ -4,7 +4,7 @@ import ToolsGrid from '@/components/tools-grid';
 import Link from 'next/link';
 
 export const metadata = {
-  title: '资源推荐 - AI教育工具精选 - CC妈AI教育',
+  title: '资源推荐 - AI教育工具精选 - CC妈育见AI',
   description: '精选AI教育工具推荐，从入门到进阶，涵盖ChatGPT、Gemini、豆包等主流AI工具，帮助你快速上手AI+教育。',
   keywords: ['AI工具推荐', 'AI教育工具', 'ChatGPT', 'Gemini', '豆包', 'AI工具评测'],
 };

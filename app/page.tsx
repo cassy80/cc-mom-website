@@ -15,15 +15,15 @@ export default function Home() {
       <Hero />
 
       {/* 核心内容区块 */}
-      <section className="py-24 px-4 bg-background-alt">
+      <section id="learning-tools" className="scroll-mt-20 py-16 px-4 bg-background-alt">
         <div className="container-content">
           {/* 标题 - 优化设计 */}
           <div className="text-center mb-16">
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6">
-              探索AI+教育的无限可能
+              从这里开始探索
             </h2>
             <p className="text-foreground-muted max-w-2xl mx-auto text-lg leading-relaxed">
-              从理论到实践，从工具到方法，全方位助力教育创新
+              认识CC妈，阅读实战分享，体验英语学习工具和数学益智游戏
             </p>
           </div>
 
@@ -35,8 +35,8 @@ export default function Home() {
               icon="👩‍🏫"
               href="/about"
               stats={{
-                label: "专业认证",
-                value: "2个"
+                label: "个人介绍",
+                value: "认识CC妈"
               }}
             />
             <FeatureCard

@@ -17,7 +17,7 @@ export default function Footer() {
               </div>
               <div className="flex flex-col">
                 <span className="font-serif font-bold text-xl text-foreground">
-                  CC妈AI教育
+                  CC妈育见AI
                 </span>
                 <span className="text-xs text-foreground-muted font-medium tracking-wide">
                   AI EDUCATOR
@@ -30,7 +30,7 @@ export default function Footer() {
             {/* 社交媒体链接 */}
             <div className="flex gap-3">
               <a
-                href="https://www.xiaohongshu.com/user/profile/498481010"
+                href="https://www.xiaohongshu.com/user/profile/5ac5cc5411be107deceab7f9"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-lg bg-brand-primary/10 flex items-center justify-center text-brand-primary hover:bg-brand-primary hover:text-white transition-all duration-300"
@@ -160,7 +160,7 @@ export default function Footer() {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="https://www.xiaohongshu.com/user/profile/498481010"
+                  href="https://www.xiaohongshu.com/user/profile/5ac5cc5411be107deceab7f9"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-foreground-muted hover:text-brand-primary transition-colors text-sm flex items-center gap-3 group"
@@ -200,7 +200,7 @@ export default function Footer() {
         <div className="border-t border-border mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-foreground-muted text-sm">
-              © 2026 CC妈AI教育. 保留所有权利.
+              © 2026 CC妈育见AI. 保留所有权利.
             </p>
             <div className="flex items-center gap-6 text-sm">
               <a

@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "CC妈育见AI - 用20年商业逻辑，培养AI时代的首席指挥官",
-  description: "CC妈育见AI，生成式AI工程师、Gemini全球认证教育专家、20年+商业管理经验、15岁与8岁双宝妈。专注AI教育实战、提示词工程、零代码工具应用，分享如何培养孩子的AI提问力和逻辑思维。提供AI教学工具实战、ChatGPT应用指南和个性化教育方案。",
+  description: "CC妈育见AI的个人官网，分享AI学习工具实测、亲子AI实践，以及英语、数学等学科的互动学习资源。了解CC妈、阅读实战文章，查找官方小红书账号。",
   keywords: ["AI教育", "AI提问力培养", "ChatGPT教育应用", "AI教学工具", "提示词工程", "Gemini教育", "Claude AI教育", "零代码工具", "家庭教育AI化", "CC妈育见AI", "AI指挥官培养"],
   authors: [{ name: "CC妈育见AI" }],
   creator: "CC妈育见AI",
@@ -12,13 +12,13 @@ export const metadata: Metadata = {
     locale: "zh_CN",
     url: "https://ccma-ai.com",
     title: "CC妈育见AI - 用20年商业逻辑，培养AI时代的首席指挥官",
-    description: "生成式AI工程师、Gemini全球认证教育专家、20年+商业管理经验。专注AI教育实战、提示词工程、零代码工具应用。",
+    description: "CC妈育见AI的个人官网，分享AI学习工具实测、亲子AI实践，以及英语、数学等学科的互动学习资源。了解CC妈、阅读实战文章，查找官方小红书账号。",
     siteName: "CC妈育见AI",
   },
   twitter: {
     card: "summary_large_image",
     title: "CC妈育见AI - 用20年商业逻辑，培养AI时代的首席指挥官",
-    description: "生成式AI工程师、Gemini全球认证教育专家、20年+商业管理经验、15岁与8岁双宝妈。",
+    description: "CC妈育见AI的个人官网，分享AI学习工具实测、亲子AI实践，以及英语、数学等学科的互动学习资源。了解CC妈、阅读实战文章，查找官方小红书账号。",
   },
   robots: {
     index: true,
@@ -46,6 +46,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <head>
+        <meta name="msvalidate.01" content="96C722916B82017FC8F82CB2C8E77C5D" />
         {/* Google Fonts - Linear风格 (Inter) */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -66,7 +67,7 @@ export default function RootLayout({
               description: "用20年商业逻辑，重塑孩子的AI提问力。澳洲信息系统硕士、Gemini全球认证教育专家、15岁与8岁双宝妈。专注AI教育实战、零代码工具应用、女性破局经验分享。",
               url: "https://ccma-ai.com",
               sameAs: [
-                "https://www.xiaohongshu.com/user/profile/498481010"
+                "https://www.xiaohongshu.com/user/profile/5ac5cc5411be107deceab7f9"
               ],
               knowsAbout: [
                 "AI教育实战",
@@ -116,7 +117,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "CC妈育见AI",
-              alternateName: "CC妈AI教育",
+              alternateName: "CC妈育见AI",
               url: "https://ccma-ai.com",
               description: "用20年商业逻辑，重塑孩子的AI提问力。专注AI教育实战、零代码工具应用、女性破局经验分享。",
               inLanguage: "zh-CN",

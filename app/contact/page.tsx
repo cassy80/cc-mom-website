@@ -3,7 +3,7 @@ import Footer from '@/components/footer';
 import Link from 'next/link';
 
 export const metadata = {
-  title: '联系我 - CC妈AI教育',
+  title: '联系我 - CC妈育见AI',
   description: '有任何问题或合作意向？欢迎通过小红书、邮件等方式联系CC妈，一起探讨AI教育的无限可能。',
   keywords: ['联系CC妈', 'AI教育咨询', '合作联系', 'CC妈联系方式'],
 };
@@ -54,7 +54,7 @@ export default function ContactPage() {
                   关注我的小红书账号，获取最新的AI教育干货、工具推荐和实战案例
                 </p>
                 <a
-                  href="https://www.xiaohongshu.com/user/profile/498481010"
+                  href="https://www.xiaohongshu.com/user/profile/5ac5cc5411be107deceab7f9"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-colors"

@@ -266,3 +266,9 @@ footer { padding-top: 12px; color: rgba(255,255,255,.45); text-align: center; fo
   .dialog { padding: 22px 18px; }
   .result-actions { flex-direction: column; }
 }
+
+.website-home { display: inline-flex; align-items: center; gap: 5px; text-decoration: none; white-space: nowrap; }
+.website-home:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+@media (max-width: 540px) { .topbar:has(.website-home:not([hidden])) { flex-wrap: wrap; gap: 14px; } }
+
+.top-action.website-home { width: auto; padding: 0 10px; color: white; flex-shrink: 0; }

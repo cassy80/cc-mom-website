@@ -58,13 +58,13 @@ export default function AboutPage() {
                   </h3>
                   <div className="space-y-3">
                     <a
-                      href="https://www.xiaohongshu.com/user/profile/498481010"
+                      href="https://www.xiaohongshu.com/user/profile/5ac5cc5411be107deceab7f9"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 text-foreground-muted hover:text-primary transition-colors"
                     >
                       <span className="text-xl">📱</span>
-                      <span>小红书</span>
+                      <span>官方小红书：CC妈育见AI</span>
                     </a>
                     <a
                       href="mailto:contact@ccma-ai.com"
@@ -88,7 +88,7 @@ export default function AboutPage() {
                 </h2>
                 <div className="space-y-4 text-foreground-muted leading-relaxed">
                   <p>
-                    我是<strong className="text-foreground">CC妈</strong>。
+                    我是<strong className="text-foreground">CC妈</strong>，「CC妈育见AI」是我的自媒体名称，ccma-ai.com 是我的个人官网。这里分享AI学习工具实测、亲子AI实践，以及英语、数学等学科的互动学习资源，帮助家长把工具真正用起来。
                   </p>
                   <p>
                     回想在澳洲攻读信息系统、在全球 500 强企业历练的 20 年里，我一直在处理"效率"。但在家，我也曾是那个为辅导作业气到"心梗"、看着孩子为刷题熬夜而心疼不已的普通妈妈。

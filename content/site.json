@@ -1,6 +1,6 @@
 {
-  "name": "CC妈AI教育",
-  "description": "专注AI教育实战、零代码应用、女性破局。15岁与8岁双宝妈，20年大厂思维，Gemini全球认证教育专家，分享AI+教育的实践与思考。",
+  "name": "CC妈育见AI",
+  "description": "CC妈育见AI的个人官网，分享AI学习工具实测、亲子AI实践，以及英语、数学等学科的互动学习资源。了解CC妈、阅读实战文章，查找官方小红书账号。",
   "url": "https://ccma-ai.com",
   "locale": "zh-CN",
   "author": {
@@ -8,7 +8,7 @@
     "url": "https://ccma-ai.com/about"
   },
   "social": {
-    "xiaohongshu": "https://www.xiaohongshu.com/user/profile/498481010"
+    "xiaohongshu": "https://www.xiaohongshu.com/user/profile/5ac5cc5411be107deceab7f9"
   },
   "keywords": [
     "AI教育实战",

@@ -11,7 +11,7 @@ export default function Navbar() {
               <span className="text-white font-bold text-sm">CC</span>
             </div>
             <span className="font-semibold text-base text-foreground group-hover:text-brand-primary transition-colors duration-300">
-              CC妈AI教育
+              CC妈育见AI
             </span>
           </Link>
 

@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "关于CC妈 - AI教育实战专家、Gemini认证教育专家",
-  description: "CC妈，生成式AI工程师、Gemini全球认证教育专家，拥有澳洲信息系统硕士学位。用20年商业逻辑，重塑孩子的AI提问力。专注AI教育实战、零代码工具应用、女性破局经验分享。在小红书拥有13.6万赞藏。",
+  title: "关于CC妈育见AI - 个人介绍与官方账号",
+  description: "CC妈育见AI的个人官网，分享AI学习工具实测、亲子AI实践，以及英语、数学等学科的互动学习资源。了解CC妈、阅读实战文章，查找官方小红书账号。",
   keywords: [
     "CC妈",
     "AI教育专家",
@@ -14,8 +14,8 @@ export const metadata: Metadata = {
     "女性职业破局"
   ],
   openGraph: {
-    title: "关于CC妈 - 用20年商业逻辑，重塑孩子的AI提问力",
-    description: "CC妈，生成式AI工程师、Gemini全球认证教育专家。15年+商业经验，15岁与8岁双宝妈。专注AI教育实战、零代码工具应用。",
+    title: "关于CC妈育见AI - 个人介绍与官方账号",
+    description: "CC妈育见AI的个人官网，分享AI学习工具实测、亲子AI实践，以及英语、数学等学科的互动学习资源。了解CC妈、阅读实战文章，查找官方小红书账号。",
     url: "https://ccma-ai.com/about",
     type: "profile",
   },
@@ -47,7 +47,7 @@ export default function AboutLayout({
               url: "https://ccma-ai.com"
             },
             sameAs: [
-              "https://www.xiaohongshu.com/user/profile/498481010"
+              "https://www.xiaohongshu.com/user/profile/5ac5cc5411be107deceab7f9"
             ],
             knowsAbout: [
               "AI教育实战",

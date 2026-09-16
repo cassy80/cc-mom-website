@@ -47,7 +47,7 @@ export default function ArticlesLayout({
               "@type": "Person",
               name: "CC妈",
               url: "https://ccma-ai.com",
-              sameAs: ["https://www.xiaohongshu.com/user/profile/498481010"]
+              sameAs: ["https://www.xiaohongshu.com/user/profile/5ac5cc5411be107deceab7f9"]
             },
             publisher: {
               "@type": "Person",

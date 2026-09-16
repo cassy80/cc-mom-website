@@ -245,7 +245,7 @@ export default function FAQPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="https://www.xiaohongshu.com/user/profile/498481010"
+              href="https://www.xiaohongshu.com/user/profile/5ac5cc5411be107deceab7f9"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-colors shadow-lg hover:shadow-xl"

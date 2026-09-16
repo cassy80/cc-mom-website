@@ -156,7 +156,7 @@ export default function EnglishLearningPage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 mt-16">
         <div className="container mx-auto px-4 py-6 text-center text-gray-600 text-sm">
-          <p>© 2026 CC妈AI教育 · 英语学习中心</p>
+          <p>© 2026 CC妈育见AI · 英语学习中心</p>
         </div>
       </footer>
     </div>

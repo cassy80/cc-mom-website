@@ -171,6 +171,7 @@ function showModeScreen() {
   el("modeScreen").hidden = false;
   el("gameView").hidden = true;
   el("homeButton").hidden = true;
+  el("websiteHomeLink").hidden = false;
   el("levelsButton").hidden = true;
   el("levelModal").hidden = true;
   el("challengeResult").hidden = true;
@@ -234,6 +235,7 @@ function prepareGameView() {
   el("modeScreen").hidden = true;
   el("gameView").hidden = false;
   el("homeButton").hidden = false;
+  el("websiteHomeLink").hidden = true;
   el("challengeResult").hidden = true;
   el("timer").classList.remove("urgent");
 }

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "常见问题 - CC妈育见AI",
-  description: "CC妈AI教育常见问题解答：AI教育是什么、如何开始学习AI、ChatGPT在教育中的应用、AI工具推荐、零代码工具应用等。",
+  description: "CC妈育见AI常见问题解答：AI教育是什么、如何开始学习AI、ChatGPT在教育中的应用、AI工具推荐、零代码工具应用等。",
   keywords: [
     "AI教育常见问题",
     "ChatGPT教育应用",
@@ -33,7 +33,7 @@ export default function FAQLayout({
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            name: "CC妈AI教育常见问题",
+            name: "CC妈育见AI常见问题",
             description: "关于AI教育、ChatGPT应用、AI工具等的常见问题解答",
             url: "https://ccma-ai.com/faq",
             author: {

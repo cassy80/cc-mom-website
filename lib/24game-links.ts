@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 
 const LINKS_FILE = path.join(process.cwd(), 'data', '24game-links.json');
-const MAX_LINKS = 30;
+const MAX_LINKS = 45;
 
 export type GameLinkStatus = 'active' | 'disabled';
 
@@ -51,7 +51,7 @@ export async function generateGameLinks(count: number): Promise<GameAccessLink[]
   const remainingCapacity = MAX_LINKS - database.links.length;
 
   if (remainingCapacity <= 0) {
-    throw new Error('专属链接数量已达到30条上限');
+    throw new Error(`专属链接数量已达到${MAX_LINKS}条上限`);
   }
 
   const safeCount = Math.min(Math.max(1, Math.floor(count)), remainingCapacity);
