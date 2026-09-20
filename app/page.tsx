@@ -23,12 +23,12 @@ export default function Home() {
               从这里开始探索
             </h2>
             <p className="text-foreground-muted max-w-2xl mx-auto text-lg leading-relaxed">
-              认识CC妈，阅读实战分享，体验英语学习工具和数学益智游戏
+              认识CC妈，阅读实战分享，体验学习地图与数学益智游戏
             </p>
           </div>
 
           {/* 核心内容卡片 - 使用新配色 */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <FeatureCard
               title="关于我"
               description="了解CC妈的教育背景、专业认证和AI教育实践历程"
@@ -77,6 +77,16 @@ export default function Home() {
               stats={{
                 label: "益智游戏",
                 value: "1个"
+              }}
+            />
+            <FeatureCard
+              title="学习地图"
+              description="从知识之间的联系出发，探索适合家庭使用的互动学习路径"
+              icon="🗺️"
+              href="/learning-maps"
+              stats={{
+                label: "当前已上线",
+                value: "小学数学"
               }}
             />
           </div>
