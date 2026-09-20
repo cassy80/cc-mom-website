@@ -33,6 +33,26 @@ const levelPuzzles = [
   [3, 6, 7, 10], [4, 5, 10, 10], [4, 7, 8, 10], [5, 7, 10, 10], [6, 9, 9, 10],
   [1, 1, 6, 8], [6, 6, 8, 8], [6, 7, 8, 9], [7, 8, 9, 10], [1, 3, 7, 9],
   [1, 4, 6, 10], [2, 4, 5, 5], [2, 5, 7, 8], [2, 7, 8, 9], [4, 5, 7, 10],
+  [3, 4, 10, 10], [1, 4, 8, 9], [2, 5, 6, 7], [2, 7, 10, 10], [4, 4, 4, 6],
+  [1, 3, 5, 6], [1, 1, 6, 6], [2, 2, 2, 10], [4, 4, 5, 8], [2, 2, 4, 6],
+  [4, 7, 8, 8], [4, 4, 4, 7], [3, 5, 6, 9], [3, 6, 6, 7], [4, 7, 7, 8],
+  [3, 9, 9, 10], [1, 1, 4, 6], [3, 4, 5, 8], [2, 6, 6, 8], [4, 4, 5, 7],
+  [2, 5, 6, 6], [2, 4, 5, 6], [2, 2, 3, 9], [1, 4, 7, 9], [1, 1, 4, 8],
+  [4, 4, 7, 10], [1, 2, 3, 6], [3, 7, 8, 8], [1, 2, 6, 10], [2, 3, 6, 6],
+  [1, 1, 8, 8], [2, 3, 4, 5], [2, 3, 3, 9], [1, 2, 7, 9], [5, 6, 9, 9],
+  [3, 6, 6, 6], [2, 8, 8, 9], [1, 1, 5, 8], [1, 2, 5, 8], [2, 4, 4, 10],
+  [2, 2, 6, 10], [3, 3, 8, 9], [2, 6, 9, 10], [5, 6, 8, 8], [1, 4, 7, 8],
+  [1, 4, 4, 9], [4, 4, 6, 8], [1, 4, 6, 9], [3, 5, 5, 6], [1, 1, 4, 7],
+  [4, 4, 5, 6], [1, 2, 7, 10], [7, 8, 8, 10], [2, 3, 6, 7], [2, 2, 2, 3],
+  [1, 1, 2, 8], [1, 2, 8, 8], [1, 2, 3, 3], [6, 6, 6, 10], [3, 3, 5, 7],
+  [3, 8, 8, 9], [3, 4, 4, 9], [1, 1, 3, 4], [1, 6, 6, 10], [2, 3, 3, 10],
+  [2, 2, 2, 5], [4, 4, 4, 10], [1, 2, 6, 9], [1, 5, 6, 9], [2, 2, 6, 9],
+  [3, 6, 8, 8], [2, 5, 8, 8], [4, 6, 9, 10], [2, 2, 5, 7], [6, 8, 8, 9],
+  [1, 5, 6, 6], [1, 2, 2, 4], [4, 5, 6, 6], [1, 4, 4, 10], [3, 3, 3, 5],
+  [2, 2, 2, 7], [2, 2, 3, 6], [1, 3, 6, 10], [1, 4, 4, 5], [2, 2, 3, 5],
+  [2, 4, 7, 8], [1, 3, 3, 7], [2, 3, 8, 9], [2, 3, 3, 8], [2, 2, 4, 4],
+  [2, 5, 10, 10], [4, 6, 6, 10], [1, 3, 9, 9], [5, 5, 7, 10], [4, 5, 8, 10],
+  [5, 5, 8, 10], [5, 6, 10, 10], [4, 6, 7, 9], [1, 3, 8, 10], [1, 3, 8, 9],
 ];
 
 const state = {
@@ -411,11 +431,11 @@ function selectCard(id) {
   if (state.solved || state.phase !== "playing") return;
   const card = state.cards.find((item) => item.id === id);
   if (!card) return;
+  playCardFlipSound();
   if (!state.selectedCardId) {
     state.selectedCardId = id;
     state.operator = null;
     clearFeedback();
-    playTone(420, 0.04);
     render();
     return;
   }
@@ -429,7 +449,6 @@ function selectCard(id) {
   if (!state.operator) {
     state.selectedCardId = id;
     showFeedback("已更换第一个数字，请选择运算符", "info");
-    playTone(420, 0.04);
     render();
     return;
   }
@@ -673,6 +692,40 @@ function playTone(frequency, duration, volume = 0.05, type = "sine") {
   } catch { /* 浏览器不支持音效时静默继续 */ }
 }
 
+// Filtered noise imitates a short paper flick, without a pitched electronic beep.
+let cardFlipBuffer;
+function playCardFlipSound() {
+  if (!state.sound) return;
+  try {
+    audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+    if (audioContext.state === "suspended") audioContext.resume().catch(() => {});
+    if (!cardFlipBuffer) {
+      cardFlipBuffer = audioContext.createBuffer(1, Math.ceil(audioContext.sampleRate * 0.14), audioContext.sampleRate);
+      const data = cardFlipBuffer.getChannelData(0);
+      for (let i = 0; i < data.length; i += 1) data[i] = Math.random() * 2 - 1;
+    }
+    const source = audioContext.createBufferSource();
+    source.buffer = cardFlipBuffer;
+    const filter = audioContext.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.Q.value = 0.65;
+    const gain = audioContext.createGain();
+    const now = audioContext.currentTime;
+    filter.frequency.setValueAtTime(2600, now);
+    filter.frequency.exponentialRampToValueAtTime(850, now + 0.13);
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.22, now + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.045, now + 0.045);
+    gain.gain.linearRampToValueAtTime(0.12, now + 0.06);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
+    gain.gain.linearRampToValueAtTime(0, now + 0.14);
+    source.connect(filter).connect(gain).connect(audioContext.destination);
+    source.onended = () => { source.disconnect(); filter.disconnect(); gain.disconnect(); };
+    source.start(now);
+    source.stop(now + 0.14);
+  } catch { /* Audio is optional; card interactions must still work. */ }
+}
+
 function playMergeSound() {
   playTone(440, 0.07, 0.04);
   setTimeout(() => playTone(660, 0.09, 0.04), 55);
@@ -713,6 +766,13 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-state.unlockedLevel = Math.min(Math.max(1, state.unlockedLevel), levelPuzzles.length);
+// Keep existing level numbers and stars; completed players can continue after expansion.
+const completedLevel = Math.max(0, ...Object.entries(state.levelStars)
+  .filter(([level, stars]) => Number.isInteger(Number(level)) && Number(level) >= 1
+    && Number(level) <= levelPuzzles.length && Number(stars) >= 1 && Number(stars) <= 3)
+  .map(([level]) => Number(level)));
+state.unlockedLevel = Math.min(Math.max(1, state.unlockedLevel, completedLevel + 1), levelPuzzles.length);
+localStorage.setItem(STORAGE_KEYS.unlockedLevel, String(state.unlockedLevel));
 updateModeStatus();
 showModeScreen();
+
