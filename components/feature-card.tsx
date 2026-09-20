@@ -45,7 +45,7 @@ export default function FeatureCard({
         <div className="pt-4 border-t border-border">
           <div className="flex items-center justify-between">
             <span className="text-xs text-foreground-muted">{stats.label}</span>
-            <span className="text-sm font-semibold text-white">
+            <span className="text-sm font-semibold text-foreground">
               {stats.value}
             </span>
           </div>
