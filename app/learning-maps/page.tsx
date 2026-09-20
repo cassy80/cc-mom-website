@@ -17,7 +17,7 @@ export default function LearningMapsPage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <Link href="/learning-maps/math/index.html" className="md:col-span-2 group rounded-2xl border border-brand-primary/20 bg-gradient-to-br from-[#111827] to-[#202a44] p-8 text-white shadow-lg transition-transform hover:-translate-y-1">
+          <Link href="/map" className="md:col-span-2 group rounded-2xl border border-brand-primary/20 bg-gradient-to-br from-[#111827] to-[#202a44] p-8 text-white shadow-lg transition-transform hover:-translate-y-1">
             <span className="inline-block rounded-full border border-white/25 px-3 py-1 text-xs font-semibold mb-8">已上线 · 持续完善</span>
             <div className="text-4xl mb-5" aria-hidden="true">🔵</div>
             <h2 className="text-2xl md:text-3xl font-bold mb-3">小学数学知识地图</h2>
